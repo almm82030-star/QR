@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تذكرة جديدة | الزهراني لوجستيك</title>
+    <title>تذكرة الانتظار | الزهراني لوجستيك</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --primary-blue: #1a237e;
@@ -14,7 +16,9 @@
             --light-blue: #e8eaf6;
             --white: #ffffff;
             --success-green: #4CAF50;
+            --dark-blue: #0d1b6b;
             --text-dark: #333;
+            --border-color: #e0e0e0;
         }
 
         * {
@@ -23,722 +27,806 @@
             box-sizing: border-box;
             font-family: 'Cairo', sans-serif;
         }
-        
-        /* إجبار الوضع الأفقي */
+
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
             width: 100vw;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 2vh 2vw;
             overflow: hidden;
-            transform-origin: center center;
+            /* Prevent scrolling on TV */
         }
-        
-        /* إجبار الشاشة الأفقية */
-        @media screen and (orientation: portrait) {
-            body {
-                transform: rotate(90deg);
-                transform-origin: center center;
-                width: 100vh;
-                height: 100vw;
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                margin: auto;
-            }
-        }
-        
-        /* الحاوية الرئيسية للوضع الأفقي */
+
+        /* Main Container - Optimized for Full Screen/TV */
         .ticket-container {
-            background-color: var(--white);
-            border-radius: 3vh;
-            box-shadow: 0 2vh 4vh rgba(0, 0, 0, 0.15);
-            width: 96vw;
+            width: 95vw;
             height: 90vh;
+            max-width: 1920px;
+            /* Limit width on ultra-wide monitors */
+            background: var(--white);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            border: 5px solid var(--accent-gold);
             display: flex;
             flex-direction: row;
-            overflow: hidden;
-            border: 0.5vh solid var(--accent-gold);
+            position: relative;
         }
-        
-        /* الجانب الأيسر (المعلومات الأساسية) */
-        .left-section {
+
+        /* Left Side - Info */
+        .ticket-info {
             flex: 1;
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
-            color: var(--white);
-            padding: 4vh 3vw;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+            padding: 3vh 2vw;
+            /* Responsive padding */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
+            position: relative;
+            overflow: hidden;
+            color: white;
+            z-index: 10;
         }
-        
-        .logo {
-            height: 12vh;
-            max-width: 80%;
-            object-fit: contain;
+
+        /* Decorative Background */
+        .ticket-info::before {
+            content: '';
+            position: absolute;
+            top: -15vw;
+            right: -15vw;
+            width: 40vw;
+            height: 40vw;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .ticket-info::after {
+            content: '';
+            position: absolute;
+            bottom: -10vw;
+            left: -10vw;
+            width: 30vw;
+            height: 30vw;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* Logo */
+        .logo-container {
+            width: 18vh;
+            height: 18vh;
+            min-width: 120px;
+            min-height: 120px;
+            background: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             margin-bottom: 3vh;
+            border: 0.8vh solid var(--accent-gold);
+            box-shadow: 0 1vh 3vh rgba(0, 0, 0, 0.4);
+            z-index: 2;
         }
-        
+
+        .logo-container img {
+            width: 70%;
+            height: 70%;
+            object-fit: contain;
+        }
+
+        /* Company Name */
         .company-name {
-            font-size: clamp(2.5rem, 4vw, 5rem);
+            font-size: 4vh;
+            /* Responsive font size */
             font-weight: 900;
-            margin-bottom: 1vh;
             color: var(--accent-gold);
+            margin-bottom: 1vh;
+            text-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.5);
+            text-align: center;
+            z-index: 2;
         }
-        
+
         .system-name {
-            font-size: clamp(1.2rem, 2vw, 2.5rem);
-            font-weight: 500;
+            font-size: 2.5vh;
             color: var(--light-blue);
             margin-bottom: 5vh;
+            text-align: center;
+            z-index: 2;
         }
-        
+
+        /* Success Section */
+        .success-section {
+            text-align: center;
+            z-index: 2;
+        }
+
         .success-icon {
-            font-size: clamp(8rem, 12vw, 15rem);
+            font-size: 12vh;
             color: var(--accent-gold);
-            margin: 3vh 0;
-            text-shadow: 0.3vh 0.3vh 0.6vh rgba(0, 0, 0, 0.3);
+            margin-bottom: 3vh;
+            animation: pulse 2s infinite;
+            text-shadow: 0 0.5vh 2vh rgba(0, 0, 0, 0.3);
         }
-        
-        .success-title {
-            font-size: clamp(2rem, 3.5vw, 4.5rem);
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .success-text {
+            font-size: 3.5vh;
             font-weight: 800;
-            margin-bottom: 2vh;
+            color: var(--white);
+            margin-bottom: 1vh;
         }
-        
-        .success-subtitle {
-            font-size: clamp(1.2rem, 2vw, 2.5rem);
-            font-weight: 400;
+
+        .success-subtext {
+            font-size: 2vh;
             color: var(--light-blue);
-            max-width: 80%;
-            line-height: 1.6;
+            opacity: 0.9;
         }
-        
-        /* الجانب الأيمن (تفاصيل التذكرة) */
-        .right-section {
+
+        /* Right Side - Details */
+        .ticket-details {
             flex: 2;
-            padding: 4vh 3vw;
+            padding: 3vh 3vw;
+            display: flex;
+            flex-direction: column;
+            gap: 2vh;
+            /* Use gap for spacing instead of margins */
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            overflow: hidden;
+            /* Prevent scrolling, assume content fits */
+        }
+
+        /* Ticket Number Section */
+        .number-section {
+            flex: 1;
+            /* Take available space */
+            text-align: center;
+            padding: 2vh;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 1vh 3vh rgba(0, 0, 0, 0.1);
+            border: 3px solid var(--accent-gold);
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: center;
         }
-        
-        .ticket-header {
-            text-align: center;
-            margin-bottom: 4vh;
-            padding-bottom: 3vh;
-            border-bottom: 0.3vh solid var(--light-blue);
+
+        .number-label {
+            font-size: 3vh;
+            color: var(--secondary-blue);
+            font-weight: 700;
         }
-        
-        .ticket-number-main {
-            font-size: clamp(6rem, 10vw, 12rem);
+
+        .ticket-number {
+            font-size: 12vh;
+            /* Large for visibility */
             font-weight: 900;
             color: var(--primary-blue);
-            margin: 2vh 0;
+            line-height: 1;
             direction: ltr;
-            text-shadow: 0.2vh 0.2vh 0.4vh rgba(0, 0, 0, 0.1);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         }
-        
+
         .ticket-number-arabic {
-            font-size: clamp(3rem, 6vw, 8rem);
+            font-size: 6vh;
             color: var(--secondary-blue);
-            margin-bottom: 3vh;
+            font-weight: 700;
+            line-height: 1;
         }
-        
-        /* قسم معلومات القسم */
+
+        /* Department & Content Grid */
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            /* Split layout for large screens */
+            gap: 2vh;
+            flex: 2;
+            /* Take remaining space */
+        }
+
         .department-section {
-            background: linear-gradient(135deg, #f0f4ff 0%, #e8eaf6 100%);
-            border-radius: 2vh;
-            padding: 3vh;
-            margin: 3vh 0;
-            border-right: 0.5vh solid var(--accent-gold);
+            padding: 2vh;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 1vh 3vh rgba(0, 0, 0, 0.1);
+            border-right: 6px solid var(--accent-gold);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-        
-        .department-label {
-            font-size: clamp(1.2rem, 2vw, 2.5rem);
-            color: var(--secondary-blue);
-            margin-bottom: 1vh;
-            font-weight: 600;
-        }
-        
-        .department-name {
-            font-size: clamp(2rem, 3.5vw, 4.5rem);
+
+        .section-title {
+            font-size: 2.5vh;
             font-weight: 800;
             color: var(--primary-blue);
-            margin-bottom: 2vh;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        
-        .department-description {
-            color: #666;
-            font-size: clamp(1rem, 1.8vw, 2.2rem);
-            line-height: 1.6;
+
+        .section-title i {
+            color: var(--accent-gold);
+            font-size: 3vh;
         }
-        
-        /* قسم التعليمات */
+
+        .department-name {
+            font-size: 3.5vh;
+            font-weight: 800;
+            color: var(--dark-blue);
+            margin: 1.5vh 0;
+            border-bottom: 2px solid var(--light-blue);
+            padding-bottom: 1vh;
+        }
+
+        .department-details {
+            font-size: 2vh;
+            color: #444;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+
+        .location-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--secondary-blue);
+            font-weight: 700;
+            font-size: 2vh;
+            background: var(--light-blue);
+            padding: 1.5vh;
+            border-radius: 10px;
+            margin-top: auto;
+        }
+
+        /* Instructions Section */
         .instructions-section {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2vh;
-            margin: 3vh 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1vh;
         }
-        
+
         .instruction-card {
-            background-color: #fff8e1;
-            padding: 2vh;
-            border-radius: 1.5vh;
-            text-align: center;
-            border-right: 0.4vh solid #ffb300;
+            background: var(--white);
+            border-radius: 15px;
+            padding: 1.5vh;
+            display: flex;
+            align-items: center;
+            gap: 1.5vh;
+            box-shadow: 0 0.5vh 2vh rgba(0, 0, 0, 0.05);
+            border-right: 4px solid var(--accent-gold);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            height: 100%;
         }
-        
+
+        .instruction-card:hover {
+            transform: translateX(-5px);
+            background: #fffde7;
+        }
+
         .instruction-icon {
-            font-size: clamp(2rem, 3.5vw, 4rem);
-            color: #ff8f00;
-            margin-bottom: 1.5vh;
-        }
-        
-        .instruction-text {
-            color: #5d4037;
-            font-size: clamp(0.9rem, 1.6vw, 2rem);
-            font-weight: 600;
-        }
-        
-        /* قسم التحميل */
-        .loading {
-            display: none;
-            text-align: center;
-            margin: 4vh 0;
-        }
-        
-        .loading.active {
-            display: block;
-        }
-        
-        .spinner {
-            border: 1vh solid #f3f3f3;
-            border-top: 1vh solid var(--primary-blue);
-            border-radius: 50%;
-            width: 10vh;
-            height: 10vh;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 3vh;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .loading-text {
-            font-size: clamp(1.2rem, 2vw, 2.5rem);
-            color: var(--primary-blue);
-            font-weight: 600;
-        }
-        
-        /* معلومات الانتظار */
-        .waiting-info {
-            background-color: #e8f5e9;
-            border-radius: 2vh;
-            padding: 2.5vh;
-            margin-top: 3vh;
+            width: 6vh;
+            height: 6vh;
+            background: var(--primary-blue);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 2vw;
-            border-right: 0.5vh solid #4CAF50;
+            color: var(--white);
+            font-size: 2.5vh;
+            flex-shrink: 0;
         }
-        
-        .waiting-icon {
-            color: #4CAF50;
-            font-size: clamp(2rem, 3vw, 3.5rem);
+
+        .instruction-content {
+            flex: 1;
         }
-        
-        .waiting-text {
-            color: #2e7d32;
-            font-size: clamp(1rem, 1.8vw, 2.2rem);
+
+        .instruction-text-ar {
+            font-size: 1.8vh;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .instruction-text-en {
+            font-size: 1.4vh;
+            color: #666;
+            direction: ltr;
+            /* Ensure English text is LTR */
+            text-align: left;
+        }
+
+        /* Timing & Footer combined or compact */
+        .footer-row {
+            display: flex;
+            gap: 2vh;
+            height: auto;
+        }
+
+        .timing-section {
+            flex: 1;
+            padding: 1.5vh;
+            background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+            border-radius: 20px;
+            border-right: 6px solid var(--accent-gold);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .waiting-time {
+            display: flex;
+            align-items: center;
+            gap: 2vh;
+        }
+
+        .time-icon {
+            font-size: 4vh;
+            color: var(--primary-blue);
+        }
+
+        .time-label {
+            font-size: 1.6vh;
+            color: #5d4037;
             font-weight: 700;
         }
-        
-        /* المؤقت العد التنازلي */
-        .countdown-section {
-            text-align: center;
-            margin-top: 4vh;
-            padding-top: 3vh;
-            border-top: 0.2vh solid #eee;
-        }
-        
-        .countdown-text {
-            font-size: clamp(1rem, 1.8vw, 2.2rem);
-            color: #666;
-            margin-bottom: 1vh;
-        }
-        
-        .countdown-timer {
-            font-size: clamp(2rem, 3.5vw, 4.5rem);
+
+        .time-value {
+            font-size: 2.5vh;
             font-weight: 900;
             color: var(--primary-blue);
-            direction: ltr;
         }
-        
-        /* الفوتر */
-        .footer {
+
+        .footer-simple {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.4vh;
+            color: #666;
+            text-align: center;
+            background: white;
+            border-radius: 20px;
+            padding: 1vh;
+        }
+
+        /* Countdown & Controls */
+        .countdown-section {
             position: absolute;
-            bottom: 2vh;
+            bottom: 3vh;
+            left: 3vw;
+            background: var(--primary-blue);
+            color: var(--white);
+            padding: 1.5vh 3vh;
+            border-radius: 50px;
+            box-shadow: 0 1vh 3vh rgba(26, 35, 126, 0.4);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 1.5vh;
+            border: 2px solid var(--accent-gold);
+            font-size: 2vh;
+        }
+
+        .countdown-timer {
+            font-size: 3vh;
+            font-weight: 900;
+            color: var(--accent-gold);
+            width: 5vh;
+            text-align: center;
+        }
+
+        .sound-control {
+            position: absolute;
+            top: 3vh;
+            left: 3vw;
+            /* Moves to left side to avoid blocking Arabic content logic sometimes, or keep right */
+            right: auto;
+            background: var(--white);
+            border-radius: 50%;
+            width: 7vh;
+            height: 7vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-blue);
+            font-size: 3vh;
+            cursor: pointer;
+            box-shadow: 0 0.5vh 2vh rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            border: 3px solid var(--accent-gold);
+        }
+
+        /* Full Screen Button */
+        .fullscreen-control {
+            position: absolute;
+            top: 3vh;
+            left: 8vw;
+            /* Next to sound */
+            background: var(--white);
+            border-radius: 50%;
+            width: 7vh;
+            height: 7vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-blue);
+            font-size: 3vh;
+            cursor: pointer;
+            box-shadow: 0 0.5vh 2vh rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            border: 3px solid var(--accent-gold);
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
             left: 0;
             right: 0;
-            text-align: center;
-            color: #777;
-            font-size: clamp(0.8rem, 1.4vw, 1.6rem);
-            padding: 0 3vw;
+            bottom: 0;
+            background: rgba(26, 35, 126, 0.98);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
         }
-        
-        /* تحسينات للشاشات الصغيرة في الوضع الأفقي */
-        @media screen and (max-width: 1024px) {
+
+        .loading-spinner {
+            width: 10vh;
+            height: 10vh;
+            border: 1vh solid rgba(255, 255, 255, 0.3);
+            border-top: 1vh solid var(--accent-gold);
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+            margin-bottom: 2vh;
+        }
+
+        .loading-text {
+            font-size: 3vh;
+            color: white;
+            font-weight: 700;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Responsive Modifications */
+        @media (max-width: 1024px) {
             .ticket-container {
                 flex-direction: column;
-                height: auto;
-                min-height: 90vh;
+                height: 98vh;
+                width: 95vw;
             }
-            
-            .left-section {
-                padding: 3vh 2vw;
+
+            .ticket-info {
+                flex: 0 0 25vh;
+                /* Fixed height for header area */
+                flex-direction: row;
+                justify-content: space-between;
+                padding: 2vh 4vw;
+                text-align: right;
             }
-            
-            .right-section {
-                padding: 3vh 2vw;
+
+            .ticket-info::before,
+            .ticket-info::after {
+                display: none;
             }
-            
-            .instructions-section {
+
+            /* Clean up mobile/tablet BG */
+
+            .logo-container {
+                width: 10vh;
+                height: 10vh;
+                margin-bottom: 0;
+            }
+
+            .company-name {
+                font-size: 3vh;
+                margin-bottom: 0;
+                text-align: right;
+            }
+
+            .system-name {
+                display: none;
+            }
+
+            .success-section {
+                display: none;
+            }
+
+            /* Hide success icon on small screens to save space */
+
+            .ticket-details {
+                padding: 2vh;
+            }
+
+            .details-grid {
                 grid-template-columns: 1fr;
             }
-        }
-        
-        @media screen and (max-height: 600px) {
-            .ticket-container {
-                height: 95vh;
-            }
-            
-            .left-section {
-                padding: 2vh 1.5vw;
-            }
-            
-            .right-section {
-                padding: 2vh 1.5vw;
-            }
-            
-            .success-icon {
-                font-size: clamp(4rem, 8vw, 10rem);
-            }
-            
-            .ticket-number-main {
-                font-size: clamp(4rem, 7vw, 9rem);
-            }
-        }
-        
-        /* رسالة خطأ */
-        .error-message {
-            display: none;
-            background-color: #ffebee;
-            color: #d32f2f;
-            padding: 3vh;
-            border-radius: 1.5vh;
-            text-align: center;
-            margin: 3vh 0;
-            border-right: 0.5vh solid #d32f2f;
-        }
-        
-        .error-message.show {
-            display: block;
-        }
-        
-        /* رسالة نجاح */
-        .success-message {
-            display: none;
-            background-color: #e8f5e9;
-            color: #2e7d32;
-            padding: 3vh;
-            border-radius: 1.5vh;
-            text-align: center;
-            margin: 3vh 0;
-            border-right: 0.5vh solid #4CAF50;
-        }
-        
-        .success-message.show {
-            display: block;
-            animation: fadeIn 0.5s ease-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(2vh); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* تأثيرات عند تحميل التذكرة */
-        .ticket-loaded .ticket-number-main {
-            animation: pulse 1.5s ease-in-out;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        
-        /* تحسين التصميم للشاشات الواسعة */
-        @media screen and (min-width: 1600px) {
-            .ticket-container {
-                max-width: 1400px;
-                margin: 0 auto;
+
+            .countdown-section {
+                bottom: 1vh;
+                padding: 1vh 2vh;
             }
         }
     </style>
 </head>
+
 <body>
-    <div class="ticket-container">
-        <!-- الجانب الأيسر: معلومات أساسية -->
-        <div class="left-section">
-            <img src="https://i.ibb.co/1GHY3whz/bsxB90Z.png" alt="شعار شركة الزهراني لوجستيك" class="logo">
-            <div class="company-name">الزهراني لوجستيك</div>
-            <div class="system-name">نظام إدارة التذاكر الإلكتروني</div>
-            
-            <div class="success-icon">
-                <i class="fas fa-check-circle"></i>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">جاري إنشاء التذكرة...</div>
+    </div>
+
+    <div class="sound-control" id="soundControl" title="كتم/تشغيل الصوت">
+        <i class="fas fa-volume-up"></i>
+    </div>
+
+    <!-- زر ملء الشاشة -->
+    <div class="fullscreen-control" id="fullscreenControl" title="ملء الشاشة">
+        <i class="fas fa-expand"></i>
+    </div>
+
+    <div class="ticket-container" id="ticketContainer" style="display: none;">
+        <!-- Left Side -->
+        <div class="ticket-info">
+            <div class="logo-container">
+                <img src="https://i.ibb.co/1GHY3whz/bsxB90Z.png" alt="شعار الزهراني لوجستيك">
             </div>
-            
-            <h1 class="success-title">تم إنشاء تذكرتك بنجاح</h1>
-            <p class="success-subtitle">شكرًا لزيارتك، يرجى الانتظار في منطقة الانتظار حتى يتم استدعاؤك</p>
+
+            <div style="text-align: center;">
+                <h1 class="company-name">الزهراني لوجستيك</h1>
+                <p class="system-name">نظام إدارة التذاكر</p>
+            </div>
+
+            <div class="success-section">
+                <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+                <h2 class="success-text">تم قص التذكرة</h2>
+                <p class="success-subtext">يرجى الانتظار</p>
+            </div>
         </div>
-        
-        <!-- الجانب الأيمن: تفاصيل التذكرة -->
-        <div class="right-section">
-            <!-- رسالة التحميل -->
-            <div class="loading" id="loading">
-                <div class="spinner"></div>
-                <p class="loading-text">جاري إنشاء التذكرة وإعداد بياناتك...</p>
+
+        <!-- Right Side -->
+        <div class="ticket-details">
+            <!-- Top Row: Number -->
+            <div class="number-section">
+                <div class="ticket-number" id="ticketNumber">...</div>
+                <div class="ticket-number-arabic" id="ticketNumberArabic">...</div>
+                <div class="number-label" style="font-size: 2vh;">رقم التذكرة / Your Ticket</div>
             </div>
-            
-            <!-- رسالة خطأ -->
-            <div class="error-message" id="errorMessage">
-                <i class="fas fa-exclamation-triangle"></i>
-                <p>حدث خطأ في إنشاء التذكرة. يرجى المحاولة مرة أخرى.</p>
-            </div>
-            
-            <!-- محتوى التذكرة -->
-            <div id="ticketContent" style="display: none;">
-                <!-- الرأس -->
-                <div class="ticket-header">
-                    <div class="ticket-number-main" id="ticketNumber">1001</div>
-                    <div class="ticket-number-arabic" id="ticketNumberArabic">رقم: ١٠٠١</div>
-                </div>
-                
-                <!-- قسم معلومات القسم -->
+
+            <!-- Middle Grid: Dept + Instructions -->
+            <div class="details-grid">
                 <div class="department-section">
-                    <div class="department-label">القسم المخصص</div>
-                    <div class="department-name" id="departmentName">المدير المالي</div>
-                    <div class="department-description" id="departmentDescription">
-                        الرجاء التوجه إلى قسم المدير المالي في الطابق الثالث، الغرفة ٣٠١
+                    <div>
+                        <div class="section-title"><i class="fas fa-building"></i> <span>القسم المخصص</span></div>
+                        <h3 class="department-name" id="departmentName">...</h3>
+                        <p class="department-details" id="departmentDetails">...</p>
+                    </div>
+                    <div class="location-info">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span id="locationText">...</span>
                     </div>
                 </div>
-                
-                <!-- قسم التعليمات -->
+
                 <div class="instructions-section">
-                    <div class="instruction-card">
-                        <div class="instruction-icon">
-                            <i class="fas fa-chair"></i>
+                    <div class="instruction-card" onclick="speakInstruction(0)">
+                        <div class="instruction-icon"><i class="fas fa-chair"></i></div>
+                        <div class="instruction-content">
+                            <div class="instruction-text-ar">اجلس في أماكن الانتظار</div>
+                            <div class="instruction-text-en">Sit in waiting area</div>
                         </div>
-                        <div class="instruction-text">اجلس في منطقة الانتظار</div>
                     </div>
-                    
-                    <div class="instruction-card">
-                        <div class="instruction-icon">
-                            <i class="fas fa-tv"></i>
+                    <div class="instruction-card" onclick="speakInstruction(1)">
+                        <div class="instruction-icon"><i class="fas fa-desktop"></i></div>
+                        <div class="instruction-content">
+                            <div class="instruction-text-ar">راقب الشاشة</div>
+                            <div class="instruction-text-en">Watch the screen</div>
                         </div>
-                        <div class="instruction-text">تابع الشاشة الرئيسية</div>
                     </div>
-                    
-                    <div class="instruction-card">
-                        <div class="instruction-icon">
-                            <i class="fas fa-bell"></i>
+                    <div class="instruction-card" onclick="speakInstruction(2)">
+                        <div class="instruction-icon"><i class="fas fa-bullhorn"></i></div>
+                        <div class="instruction-content">
+                            <div class="instruction-text-ar">استمع للنداء</div>
+                            <div class="instruction-text-en">Listen for call</div>
                         </div>
-                        <div class="instruction-text">استمع للإعلان الصوتي</div>
-                    </div>
-                    
-                    <div class="instruction-card">
-                        <div class="instruction-icon">
-                            <i class="fas fa-user-check"></i>
-                        </div>
-                        <div class="instruction-text">توجه عند استدعائك</div>
-                    </div>
-                </div>
-                
-                <!-- معلومات الانتظار -->
-                <div class="waiting-info">
-                    <div class="waiting-icon">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <div class="waiting-text">
-                        متوسط وقت الانتظار: ١٠-١٥ دقيقة
-                    </div>
-                </div>
-                
-                <!-- المؤقت العد التنازلي -->
-                <div class="countdown-section">
-                    <div class="countdown-text">سيتم إغلاق هذه الصفحة خلال:</div>
-                    <div class="countdown-timer">
-                        <span id="countdownTimer">15</span> ثانية
                     </div>
                 </div>
             </div>
-            
-            <!-- رسالة نجاح -->
-            <div class="success-message" id="successMessage">
-                <i class="fas fa-check-circle"></i>
-                <p>تم إنشاء التذكرة بنجاح! يرجى الاحتفاظ برقم التذكرة.</p>
+
+            <!-- Bottom Row: Time & Contacts -->
+            <div class="footer-row">
+                <div class="timing-section">
+                    <div class="waiting-time">
+                        <div class="time-icon"><i class="fas fa-clock"></i></div>
+                        <div>
+                            <div class="time-label">وقت الانتظار المتوقع</div>
+                            <div class="time-value">١٠-١٥ دقيقة <span
+                                    style="font-size: 1.5vh; color: #666; font-weight: 500;">(mins)</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer-simple">
+                    <div style="font-weight: bold; margin-bottom: 0.5vh;">خدمة العملاء Customer Service</div>
+                    <div dir="ltr"><i class="fas fa-phone"></i> 920024567</div>
+                    <div dir="ltr" style="font-size: 1.2vh;">www.alzahrani-logistics.com</div>
+                </div>
             </div>
         </div>
     </div>
-    
-    <!-- الفوتر -->
-    <div class="footer">
-        <p>نظام إدارة التذاكر الإلكتروني | جميع الحقوق محفوظة © 2024</p>
-        <p>شركة الزهراني لوجستيك | خدمة العملاء: ٩٢٠٠٢٤٥٦٧</p>
+
+    <div class="countdown-section" id="countdownSection" style="display: none;">
+        <span>إغلاق تلقائي:</span>
+        <div class="countdown-timer" id="countdownTimer">30</div>
     </div>
-    
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-        import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAtvZC_Ztg8lVbOUaMl8f268RBnskq3qM0",
-            authDomain: "zah123-cd263.firebaseapp.com",
-            projectId: "zah123-cd263",
-            storageBucket: "zah123-cd263.firebasestorage.app",
-            messagingSenderId: "978446441946",
-            appId: "1:978446441946:web:d3a1183239d86c81ecf4e3",
-            databaseURL: "https://zah123-cd263-default-rtdb.firebaseio.com/"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        
-        // DOM elements
-        const loadingEl = document.getElementById('loading');
-        const ticketContentEl = document.getElementById('ticketContent');
-        const errorMessageEl = document.getElementById('errorMessage');
-        const successMessageEl = document.getElementById('successMessage');
-        const ticketNumberEl = document.getElementById('ticketNumber');
-        const ticketNumberArabicEl = document.getElementById('ticketNumberArabic');
-        const departmentNameEl = document.getElementById('departmentName');
-        const departmentDescriptionEl = document.getElementById('departmentDescription');
-        const countdownEl = document.getElementById('countdownTimer');
-        
-        // Departments mapping
+    <script>
         const departments = {
-            finance: { 
-                name: "المدير المالي", 
-                description: "الرجاء التوجه إلى قسم المدير المالي في الطابق الثالث، الغرفة ٣٠١" 
+            finance: {
+                nameAr: "المدير المالي",
+                nameEn: "Financial Manager",
+                detailsAr: "الطابق الثالث، الغرفة ٣٠١",
+                detailsEn: "3rd Floor, Room 301",
+                locationAr: "الدور 3 - مكتب 301"
             },
-            ninja: { 
-                name: "مشرفين نينجا", 
-                description: "الرجاء التوجه إلى قسم مشرفين نينجا في الطابق الثاني، الغرفة ٢٠٥" 
-            },
-            keemart: { 
-                name: "مشرف كيمارت", 
-                description: "الرجاء التوجه إلى قسم مشرف كيمارت في الطابق الأول، الغرفة ١٠٣" 
-            },
-            vehicles: { 
-                name: "مسؤول المركبات", 
-                description: "الرجاء التوجه إلى قسم مسؤول المركبات في الطابق الأرضي، الغرفة ٠٠٥" 
-            },
-            projects: { 
-                name: "مدير المشاريع التشغيلية", 
-                description: "الرجاء التوجه إلى قسم مدير المشاريع التشغيلية في الطابق الرابع، الغرفة ٤٠١" 
-            },
-            hr: { 
-                name: "مدير الموارد البشرية", 
-                description: "الرجاء التوجه إلى قسم مدير الموارد البشرية في الطابق الثالث، الغرفة ٣٠٥" 
-            }
+            ninja: { nameAr: "مشرفين نينجا", nameEn: "Ninja Supervisors", detailsAr: "الطابق الثاني، الغرفة ٢٠٥", detailsEn: "2nd Floor, Room 205", locationAr: "الدور 2 - مكتب 205" },
+            keemart: { nameAr: "مشرف كيمارت", nameEn: "Keemart Supervisor", detailsAr: "الطابق الأول، الغرفة ١٠٣", detailsEn: "1st Floor, Room 103", locationAr: "الدور 1 - مكتب 103" },
+            vehicles: { nameAr: "مسؤول المركبات", nameEn: "Vehicles Officer", detailsAr: "الطابق الأرضي، الغرفة ٠٠٥", detailsEn: "Ground Floor, Room 005", locationAr: "الدور الأرضي - مكتب 005" },
+            projects: { nameAr: "مدير المشاريع", nameEn: "Projects Manager", detailsAr: "الطابق الرابع، الغرفة ٤٠١", detailsEn: "4th Floor, Room 401", locationAr: "الدور 4 - مكتب 401" },
+            hr: { nameAr: "الموارد البشرية", nameEn: "HR Manager", detailsAr: "الطابق الثالث، الغرفة ٣٠٥", detailsEn: "3rd Floor, Room 305", locationAr: "الدور 3 - مكتب 305" }
         };
-        
-        // Function to convert numbers to Arabic-Indic digits
-        function toArabicDigits(number) {
-            const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-            return number.toString().replace(/\d/g, digit => arabicDigits[digit]);
+
+        const instructions = [
+            { ar: "فضلاً اجلس في منطقة الانتظار", en: "Please sit in the waiting area" },
+            { ar: "راقب الشاشة لمعرفة دورك", en: "Watch the screen" },
+            { ar: "استمع للنداء الصوتي", en: "Listen for the audio call" }
+        ];
+
+        let currentDepartment = 'finance';
+        let ticketNumber = 1001;
+        let speechActive = true;
+        let isSpeaking = false;
+
+        function toArabicDigits(n) {
+            return n.toString().replace(/\d/g, d => "٠١٢٣٤٥٦٧٨٩"[d]);
         }
-        
-        // Function to get department from URL parameter
-        function getDepartmentFromURL() {
+
+        function init() {
             const urlParams = new URLSearchParams(window.location.search);
-            const dept = urlParams.get('dept');
-            
-            // Validate department
-            if (!dept || !departments[dept]) {
-                return 'finance'; // Default to finance if invalid
-            }
-            
-            return dept;
+            const deptKey = urlParams.get('dept') || 'finance';
+            currentDepartment = departments[deptKey] ? deptKey : 'finance';
+
+            // Random Ticket
+            ticketNumber = 1000 + Math.floor(Math.random() * 50);
+
+            updateUI();
+
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    document.getElementById('ticketContainer').style.display = 'flex';
+                    document.getElementById('countdownSection').style.display = 'flex';
+                    startCountdown(30);
+                    setTimeout(speakAnnouncement, 2000);
+                }, 500);
+            }, 1500);
         }
-        
-        // Function to generate new ticket number
-        async function generateTicketNumber(department) {
-            try {
-                // Show loading
-                loadingEl.classList.add('active');
-                errorMessageEl.classList.remove('show');
-                successMessageEl.classList.remove('show');
-                ticketContentEl.style.display = 'none';
-                
-                // Get last ticket number for this department
-                const deptRef = ref(db, `tickets/${department}`);
-                const snapshot = await get(deptRef);
-                
-                let newTicketNumber = 1001; // Starting number
-                
-                if (snapshot.exists()) {
-                    const tickets = snapshot.val();
-                    // Find the highest ticket number
-                    const ticketNumbers = Object.keys(tickets)
-                        .map(Number)
-                        .filter(num => !isNaN(num));
-                    
-                    if (ticketNumbers.length > 0) {
-                        const highestNumber = Math.max(...ticketNumbers);
-                        newTicketNumber = highestNumber + 1;
-                    }
-                }
-                
-                // Create new ticket in database
-                const newTicketRef = ref(db, `tickets/${department}/${newTicketNumber}`);
-                await set(newTicketRef, {
-                    number: newTicketNumber,
-                    department: department,
-                    status: "waiting",
-                    timestamp: Date.now(),
-                    createdAt: new Date().toISOString()
-                });
-                
-                // Return the new ticket number
-                return newTicketNumber;
-                
-            } catch (error) {
-                console.error("Error generating ticket:", error);
-                throw error;
-            }
+
+        function updateUI() {
+            const d = departments[currentDepartment];
+            document.getElementById('ticketNumber').textContent = ticketNumber;
+            document.getElementById('ticketNumberArabic').textContent = toArabicDigits(ticketNumber);
+            document.getElementById('departmentName').textContent = d.nameAr;
+            document.getElementById('departmentDetails').textContent = d.detailsAr;
+            document.getElementById('locationText').textContent = d.locationAr;
         }
-        
-        // Countdown timer
-        function startCountdown(seconds) {
-            let timeLeft = seconds;
-            countdownEl.textContent = timeLeft;
-            
-            const countdownInterval = setInterval(() => {
-                timeLeft--;
-                countdownEl.textContent = timeLeft;
-                
-                // Change color when time is running out
-                if (timeLeft <= 5) {
-                    countdownEl.style.color = '#f44336';
-                }
-                
-                if (timeLeft <= 0) {
-                    clearInterval(countdownInterval);
-                    // Show closing message
-                    countdownEl.textContent = "جاري الإغلاق...";
-                    
-                    // Try to close the window after 2 seconds
-                    setTimeout(() => {
-                        if (window.history.length > 1) {
-                            window.history.back();
-                        } else {
-                            window.close();
-                        }
-                    }, 2000);
+
+        function speakAnnouncement() {
+            if (!speechActive || isSpeaking) return;
+            isSpeaking = true;
+            const d = departments[currentDepartment];
+
+            // Arabic
+            const utAr = new SpeechSynthesisUtterance(`رقم ${toArabicDigits(ticketNumber)}، ${d.nameAr}`);
+            utAr.lang = 'ar-SA';
+            utAr.rate = 0.9;
+
+            // English
+            const utEn = new SpeechSynthesisUtterance(`Ticket ${ticketNumber}, ${d.nameEn}`);
+            utEn.lang = 'en-US';
+            utEn.rate = 0.9;
+
+            utAr.onend = () => {
+                setTimeout(() => {
+                    if (speechActive) window.speechSynthesis.speak(utEn);
+                    utEn.onend = () => { isSpeaking = false; };
+                }, 500);
+            };
+
+            window.speechSynthesis.speak(utAr);
+        }
+
+        function speakInstruction(idx) {
+            if (isSpeaking) return;
+            isSpeaking = true;
+            const i = instructions[idx];
+            const utAr = new SpeechSynthesisUtterance(i.ar);
+            utAr.lang = 'ar-SA';
+            const utEn = new SpeechSynthesisUtterance(i.en);
+            utEn.lang = 'en-US';
+
+            utAr.onend = () => {
+                window.speechSynthesis.speak(utEn);
+                utEn.onend = () => { isSpeaking = false; };
+            };
+            window.speechSynthesis.speak(utAr);
+        }
+
+        function startCountdown(sec) {
+            let rem = sec;
+            const el = document.getElementById('countdownTimer');
+            const intv = setInterval(() => {
+                rem--;
+                el.textContent = rem;
+                if (rem <= 0) {
+                    clearInterval(intv);
+                    window.close(); // May not work in standard tabs
+                    document.body.innerHTML = "<h1 style='color:white; text-align:center; margin-top:40vh;'>شكراً لكم<br>Thank You</h1>";
                 }
             }, 1000);
         }
-        
-        // Display ticket information
-        function displayTicketInfo(ticketNumber, department) {
-            // Update ticket numbers
-            ticketNumberEl.textContent = ticketNumber;
-            ticketNumberArabicEl.textContent = `رقم: ${toArabicDigits(ticketNumber)}`;
-            
-            // Update department info
-            departmentNameEl.textContent = departments[department].name;
-            departmentDescriptionEl.textContent = departments[department].description;
-            
-            // Hide loading and show content
-            loadingEl.classList.remove('active');
-            ticketContentEl.style.display = 'block';
-            successMessageEl.classList.add('show');
-            
-            // Add loaded class for animation
-            setTimeout(() => {
-                document.querySelector('.ticket-header').classList.add('ticket-loaded');
-            }, 100);
-            
-            // Start countdown
-            startCountdown(15);
-        }
-        
-        // Initialize page
-        document.addEventListener('DOMContentLoaded', async () => {
-            const department = getDepartmentFromURL();
-            
-            if (departments[department]) {
-                try {
-                    // Generate new ticket
-                    const ticketNumber = await generateTicketNumber(department);
-                    
-                    // Display ticket information
-                    displayTicketInfo(ticketNumber, department);
-                    
-                } catch (error) {
-                    // Handle error
-                    loadingEl.classList.remove('active');
-                    errorMessageEl.classList.add('show');
-                    
-                    // Show error details in console
-                    console.error("Ticket generation failed:", error);
-                }
+
+        document.addEventListener('DOMContentLoaded', init);
+
+        // Sound Toggle
+        document.getElementById('soundControl').onclick = function () {
+            speechActive = !speechActive;
+            this.innerHTML = speechActive ? '<i class="fas fa-volume-up"></i>' : '<i class="fas fa-comment-slash"></i>';
+            if (!speechActive) window.speechSynthesis.cancel();
+        };
+
+        // Fullscreen Toggle
+        document.getElementById('fullscreenControl').onclick = function () {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                this.innerHTML = '<i class="fas fa-compress"></i>';
             } else {
-                // Invalid department
-                loadingEl.classList.remove('active');
-                errorMessageEl.classList.add('show');
-                errorMessageEl.innerHTML = `
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <p>قسم غير صالح. يرجى استخدام QR Code صالح.</p>
-                `;
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                    this.innerHTML = '<i class="fas fa-expand"></i>';
+                }
             }
-        });
-        
-        // Handle window resize for orientation changes
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                // Force reflow for responsive adjustments
-                document.body.style.display = 'none';
-                document.body.offsetHeight; // Trigger reflow
-                document.body.style.display = '';
-            }, 250);
-        });
-        
-        // Prevent accidental closing
-        window.addEventListener('beforeunload', (e) => {
-            // Only show confirmation if page hasn't been shown for at least 5 seconds
-            if (parseInt(countdownEl.textContent) > 10) {
-                e.preventDefault();
-                e.returnValue = 'هل تريد مغادرة هذه الصفحة؟ قد تفقد معلومات التذكرة.';
-            }
-        });
+        };
     </script>
 </body>
+
 </html>
