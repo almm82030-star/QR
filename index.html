@@ -10,6 +10,8 @@
   #header img { height: 80px; margin-right: 20px; }
   #ticket { font-size: 3em; margin-top: 50px; }
   #sectionName { font-size: 2em; margin-top: 20px; }
+  #loginDiv, #actionDiv { margin-top: 30px; }
+  input { padding: 10px; margin:5px; font-size: 1em; }
   button { padding: 10px 20px; margin: 10px; font-size: 1em; cursor:pointer; }
 </style>
 </head>
@@ -20,14 +22,24 @@
   <h1>نظام التذاكر</h1>
 </div>
 
-<div>
-  <label>اختر اللغة:</label>
-  <button onclick="setLang('ar')">🇸🇦 عربي</button>
-  <button onclick="setLang('en')">🇬🇧 English</button>
-</div>
-
 <div id="ticket">امسح الباركود للبدء</div>
 <div id="sectionName"></div>
+
+<!-- قسم تسجيل الدخول -->
+<div id="loginDiv">
+  <h3>تسجيل الدخول للمسؤول</h3>
+  <input type="text" id="username" placeholder="اسم المستخدم">
+  <input type="password" id="password" placeholder="كلمة المرور">
+  <button onclick="login()">تسجيل الدخول</button>
+  <p id="loginMsg" style="color:red;"></p>
+</div>
+
+<!-- قسم إجراءات التذكرة -->
+<div id="actionDiv" style="display:none;">
+  <h3>اختر التذكرة التالية بعد انتهاء المقابلة:</h3>
+  <input type="text" id="nextTicket" placeholder="رقم التذكرة">
+  <button onclick="nextTicketFunc()">عرض التذكرة</button>
+</div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
@@ -46,67 +58,82 @@
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
-  let lang = 'ar';
-  function setLang(l) {
-    lang = l;
-    if(ticketNumber && section) updateDisplay(ticketNumber, section);
-  }
-
   // الأقسام
   const sections = {
-    finance: { ar: 'المدير المالي', en: 'Financial Manager', prefix: 'F' },
-    ninja: { ar: 'مشرفين نينجا', en: 'Ninja Supervisors', prefix: 'N' },
-    keemart: { ar: 'مشرف كيمارت', en: 'Keemart Supervisor', prefix: 'K' },
-    vehicles: { ar: 'مسؤول المركبات', en: 'Vehicles Officer', prefix: 'V' }
+    finance: { ar: 'المدير المالي', en: 'Financial Manager', prefix: 'F', username:'finance', password:'00' },
+    ninja: { ar: 'مشرفين نينجا', en: 'Ninja Supervisors', prefix: 'N', username:'ninja', password:'00' },
+    keemart: { ar: 'مشرف كيمارت', en: 'Keemart Supervisor', prefix: 'K', username:'keemart', password:'00' },
+    vehicles: { ar: 'مسؤول المركبات', en: 'Vehicles Officer', prefix: 'V', username:'vehicles', password:'00' }
   };
 
   let ticketNumber = null;
   let section = null;
+  let loggedInSection = null;
 
-  // تعريف scanQR عالميًا
+  const displayDiv = document.getElementById('ticket');
+  const sectionDiv = document.getElementById('sectionName');
+  const loginDiv = document.getElementById('loginDiv');
+  const actionDiv = document.getElementById('actionDiv');
+  const loginMsg = document.getElementById('loginMsg');
+
+  // scanQR لتوليد التذكرة من QR
   window.scanQR = function(dept) {
     section = sections[dept];
-    ticketNumber = section.prefix + '-' + Math.floor(Math.random()*1000).toString().padStart(3,'0');
+    ticketNumber = section.prefix + '-' + Math.floor(Math.random()*1000).toString().padStart(4,'0');
     set(ref(db, 'tickets/' + ticketNumber), { section: dept, time: Date.now() });
     updateDisplay(ticketNumber, section);
     playAudio(ticketNumber, section);
   };
 
   function updateDisplay(ticket, section) {
-    document.getElementById('ticket').innerText = lang==='ar' ? `رقم تذكرتك: ${ticket}` : `Your Ticket: ${ticket}`;
-    document.getElementById('sectionName').innerText = lang==='ar' ? `القسم: ${section.ar}` : `Section: ${section.en}`;
+    displayDiv.innerText = `رقم تذكرتك: ${ticket}`;
+    sectionDiv.innerText = `القسم: ${section.ar}`;
   }
 
-  // دالة الصوت بالعربي والإنجليزي متتابع
   function playAudio(ticket, section) {
-    const msgAR = `رقم ${ticket} يرجى التوجه إلى ${section.ar}`;
-    const utteranceAR = new SpeechSynthesisUtterance(msgAR);
+    const utteranceAR = new SpeechSynthesisUtterance(`رقم ${ticket} يرجى التوجه إلى ${section.ar}`);
     utteranceAR.lang = 'ar-SA';
-
-    const msgEN = `Ticket ${ticket}, please proceed to ${section.en}`;
-    const utteranceEN = new SpeechSynthesisUtterance(msgEN);
+    const utteranceEN = new SpeechSynthesisUtterance(`Ticket ${ticket}, please proceed to ${section.en}`);
     utteranceEN.lang = 'en-US';
-
-    // تشغيل العربي ثم الإنجليزي تلقائيًا
-    utteranceAR.onend = () => {
-      speechSynthesis.speak(utteranceEN);
-    };
-
+    utteranceAR.onend = () => { speechSynthesis.speak(utteranceEN); };
     speechSynthesis.speak(utteranceAR);
   }
+
+  // تسجيل الدخول للمسؤول
+  window.login = function() {
+    const user = document.getElementById('username').value;
+    const pass = document.getElementById('password').value;
+    for(const key in sections){
+      if(sections[key].username===user && sections[key].password===pass){
+        loggedInSection = key;
+        loginDiv.style.display='none';
+        actionDiv.style.display='block';
+        loginMsg.innerText='';
+        return;
+      }
+    }
+    loginMsg.innerText='اسم المستخدم أو كلمة المرور خاطئة';
+  };
+
+  // اختيار التذكرة التالية بعد انتهاء مقابلة
+  window.nextTicketFunc = function() {
+    const next = document.getElementById('nextTicket').value.trim();
+    if(!next) return alert('ادخل رقم التذكرة التالية');
+    if(!loggedInSection) return alert('لم يتم تسجيل الدخول');
+    const sectionInfo = sections[loggedInSection];
+    // تحديث شاشة التذاكر
+    updateDisplay(next, sectionInfo);
+    playAudio(next, sectionInfo);
+  };
 
   // عند فتح الصفحة مع QR
   window.onload = function () {
     const params = new URLSearchParams(window.location.search);
     const dept = params.get('dept');
-    if(dept && sections[dept]) {
-      scanQR(dept);
-    }
+    if(dept && sections[dept]) scanQR(dept);
   };
 
-  // تحديث لحظي للشاشة لكل التذاكر الجديدة
-  const displayDiv = document.getElementById('ticket');
-  const sectionDiv = document.getElementById('sectionName');
+  // تحديث لحظي للشاشة لجميع التذاكر
   const ticketsRef = ref(db, 'tickets');
   onValue(ticketsRef, (snapshot) => {
     const data = snapshot.val();
@@ -114,8 +141,8 @@
     const keys = Object.keys(data);
     const lastKey = keys[keys.length -1];
     const lastSection = sections[data[lastKey].section];
-    displayDiv.innerText = lang==='ar' ? `رقم تذكرتك: ${lastKey}` : `Your Ticket: ${lastKey}`;
-    sectionDiv.innerText = lang==='ar' ? `القسم: ${lastSection.ar}` : `Section: ${lastSection.en}`;
+    displayDiv.innerText = `رقم تذكرتك: ${lastKey}`;
+    sectionDiv.innerText = `القسم: ${lastSection.ar}`;
     // صوت النداء بالعربي والإنجليزي
     const utteranceAR = new SpeechSynthesisUtterance(`رقم ${lastKey} يرجى التوجه إلى ${lastSection.ar}`);
     utteranceAR.lang = 'ar-SA';
@@ -124,7 +151,8 @@
     utteranceAR.onend = () => { speechSynthesis.speak(utteranceEN); };
     speechSynthesis.speak(utteranceAR);
   });
-</script>
 
+</script>
 </body>
 </html>
+
