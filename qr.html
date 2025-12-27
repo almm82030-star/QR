@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تذكرة جديدة | الزهراني لوجستيك</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1a237e;
+            --secondary-blue: #283593;
+            --accent-gold: #ffd700;
+            --light-blue: #e8eaf6;
+            --white: #ffffff;
+            --success-green: #4CAF50;
+            --text-dark: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5vh 5vw;
+        }
+        
+        .ticket-container {
+            background-color: var(--white);
+            border-radius: 3vh;
+            box-shadow: 0 2vh 4vh rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 90vw;
+            overflow: hidden;
+            text-align: center;
+            padding: 5vh 4vw;
+            border: 0.5vh solid var(--accent-gold);
+        }
+        
+        .header-section {
+            margin-bottom: 4vh;
+            padding-bottom: 3vh;
+            border-bottom: 0.3vh solid var(--light-blue);
+        }
+        
+        .logo {
+            height: 12vh;
+            max-width: 40vw;
+            object-fit: contain;
+            margin-bottom: 2vh;
+        }
+        
+        .company-name {
+            color: var(--primary-blue);
+            font-size: clamp(2rem, 4vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 1vh;
+        }
+        
+        .system-name {
+            color: var(--secondary-blue);
+            font-size: clamp(1.2rem, 2vw, 2.2rem);
+            font-weight: 600;
+        }
+        
+        .success-section {
+            margin: 4vh 0;
+            padding: 3vh;
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%);
+            border-radius: 2vh;
+        }
+        
+        .success-icon {
+            font-size: clamp(4rem, 8vw, 10rem);
+            color: var(--success-green);
+            margin-bottom: 2vh;
+        }
+        
+        .ticket-heading {
+            color: var(--text-dark);
+            font-size: clamp(1.8rem, 3.5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1vh;
+        }
+        
+        .success-message {
+            color: #666;
+            font-size: clamp(1.2rem, 2vw, 2.2rem);
+            margin-bottom: 3vh;
+        }
+        
+        .loading {
+            display: none;
+            margin: 4vh 0;
+            padding: 3vh;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .spinner {
+            border: 0.8vh solid #f3f3f3;
+            border-top: 0.8vh solid var(--primary-blue);
+            border-radius: 50%;
+            width: 8vh;
+            height: 8vh;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 2vh;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .ticket-info {
+            margin: 4vh 0;
+            display: none;
+        }
+        
+        .ticket-info.show {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(2vh); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .ticket-number-display {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            border-radius: 2vh;
+            padding: 4vh;
+            margin: 3vh 0;
+            color: var(--white);
+            box-shadow: 0 1vh 2vh rgba(26, 35, 126, 0.3);
+        }
+        
+        .ticket-number-label {
+            font-size: clamp(1.5rem, 2.5vw, 3rem);
+            margin-bottom: 2vh;
+            color: var(--light-blue);
+        }
+        
+        .ticket-number {
+            font-size: clamp(4rem, 10vw, 12rem);
+            font-weight: 900;
+            margin: 2vh 0;
+            direction: ltr;
+            color: var(--accent-gold);
+            text-shadow: 0.2vh 0.2vh 0.4vh rgba(0, 0, 0, 0.3);
+        }
+        
+        .ticket-number-arabic {
+            font-size: clamp(2.5rem, 6vw, 8rem);
+            color: var(--light-blue);
+            margin-top: 1vh;
+        }
+        
+        .department-info {
+            background-color: var(--light-blue);
+            padding: 3vh;
+            border-radius: 2vh;
+            margin: 4vh 0;
+            border-right: 0.5vh solid var(--accent-gold);
+        }
+        
+        .department-label {
+            font-size: clamp(1.2rem, 2vw, 2.2rem);
+            color: var(--secondary-blue);
+            margin-bottom: 1vh;
+            font-weight: 600;
+        }
+        
+        .department-name {
+            font-size: clamp(1.8rem, 3.5vw, 4rem);
+            font-weight: 800;
+            color: var(--primary-blue);
+            margin-bottom: 1vh;
+        }
+        
+        .department-description {
+            color: #666;
+            font-size: clamp(1rem, 1.8vw, 2rem);
+            line-height: 1.6;
+        }
+        
+        .instructions {
+            background-color: #fff8e1;
+            padding: 3vh;
+            border-radius: 2vh;
+            margin: 4vh 0;
+            border-right: 0.5vh solid #ffb300;
+        }
+        
+        .instructions h3 {
+            color: #ff8f00;
+            font-size: clamp(1.5rem, 2.5vw, 3rem);
+            margin-bottom: 2vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1vw;
+        }
+        
+        .instructions-list {
+            text-align: right;
+            padding-right: 3vw;
+            color: #5d4037;
+            font-size: clamp(1rem, 1.8vw, 2rem);
+        }
+        
+        .instructions-list li {
+            margin-bottom: 1.5vh;
+            line-height: 1.5;
+        }
+        
+        .waiting-time {
+            background-color: #e8f5e9;
+            padding: 2vh 3vh;
+            border-radius: 1.5vh;
+            margin-top: 3vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2vw;
+            border-right: 0.4vh solid #4CAF50;
+        }
+        
+        .waiting-time i {
+            color: #4CAF50;
+            font-size: clamp(1.5rem, 2.5vw, 3rem);
+        }
+        
+        .waiting-time p {
+            color: #2e7d32;
+            font-size: clamp(1rem, 1.8vw, 2rem);
+            font-weight: 600;
+        }
+        
+        .footer {
+            margin-top: 5vh;
+            padding-top: 3vh;
+            border-top: 0.2vh solid #eee;
+            color: #777;
+            font-size: clamp(0.9rem, 1.5vw, 1.8rem);
+        }
+        
+        .countdown {
+            font-size: clamp(1.2rem, 2vw, 2.2rem);
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-top: 2vh;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 2vh 3vw;
+            }
+            
+            .ticket-container {
+                padding: 3vh;
+                border-radius: 2vh;
+            }
+            
+            .ticket-number-display {
+                padding: 2vh;
+            }
+            
+            .department-info {
+                padding: 2vh;
+            }
+        }
+        
+        @media (max-height: 600px) {
+            .ticket-container {
+                padding: 2vh;
+            }
+            
+            .logo {
+                height: 8vh;
+            }
+            
+            .ticket-number {
+                font-size: clamp(3rem, 8vw, 10rem);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ticket-container">
+        <div class="header-section">
+            <img src="https://i.ibb.co/1GHY3whz/bsxB90Z.png" alt="شعار شركة الزهراني لوجستيك" class="logo">
+            <div class="company-name">الزهراني لوجستيك</div>
+            <div class="system-name">نظام إدارة التذاكر الإلكتروني</div>
+        </div>
+        
+        <div class="success-section">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h1 class="ticket-heading">تم إنشاء تذكرتك بنجاح</h1>
+            <p class="success-message">شكرًا لزيارتك، يرجى الانتظار حتى يتم استدعاؤك</p>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>جاري إنشاء التذكرة وإعداد بياناتك...</p>
+        </div>
+        
+        <div class="ticket-info" id="ticketInfo">
+            <div class="ticket-number-display">
+                <div class="ticket-number-label">رقم تذكرتك</div>
+                <div class="ticket-number" id="ticketNumber">1001</div>
+                <div class="ticket-number-arabic" id="ticketNumberArabic">١٠٠١</div>
+            </div>
+            
+            <div class="department-info">
+                <div class="department-label">القسم المخصص</div>
+                <div class="department-name" id="departmentName">المدير المالي</div>
+                <div class="department-description" id="departmentDescription">
+                    الرجاء التوجه إلى قسم المدير المالي في الطابق الثالث
+                </div>
+            </div>
+            
+            <div class="instructions">
+                <h3><i class="fas fa-info-circle"></i> تعليمات مهمة</h3>
+                <ul class="instructions-list">
+                    <li>يرجى الجلوس في منطقة الانتظار المخصصة</li>
+                    <li>ستتم دعوتك عبر الشاشة الرئيسية والصوتيات</li>
+                    <li>احتفظ برقم التذكرة للرجوع إليه عند الحاجة</li>
+                    <li>يرجى الالتزام بآداب الانتظار وعدم التجاوز</li>
+                </ul>
+            </div>
+            
+            <div class="waiting-time">
+                <i class="fas fa-clock"></i>
+                <p>متوسط وقت الانتظار: ١٠-١٥ دقيقة</p>
+            </div>
+            
+            <div class="countdown" id="countdown">
+                سيتم إغلاق هذه الصفحة خلال: <span id="countdownTimer">15</span> ثانية
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>نظام إدارة التذاكر الإلكتروني | جميع الحقوق محفوظة © 2024</p>
+            <p>شركة الزهراني لوجستيك | خدمة العملاء: ٩٢٠٠٢٤٥٦٧</p>
+        </div>
+    </div>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+        import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAtvZC_Ztg8lVbOUaMl8f268RBnskq3qM0",
+            authDomain: "zah123-cd263.firebaseapp.com",
+            projectId: "zah123-cd263",
+            storageBucket: "zah123-cd263.firebasestorage.app",
+            messagingSenderId: "978446441946",
+            appId: "1:978446441946:web:d3a1183239d86c81ecf4e3",
+            databaseURL: "https://zah123-cd263-default-rtdb.firebaseio.com/"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        
+        // DOM elements
+        const loadingEl = document.getElementById('loading');
+        const ticketInfoEl = document.getElementById('ticketInfo');
+        const ticketNumberEl = document.getElementById('ticketNumber');
+        const ticketNumberArabicEl = document.getElementById('ticketNumberArabic');
+        const departmentNameEl = document.getElementById('departmentName');
+        const departmentDescriptionEl = document.getElementById('departmentDescription');
+        const countdownEl = document.getElementById('countdownTimer');
+        
+        // Departments mapping
+        const departments = {
+            finance: { 
+                name: "المدير المالي", 
+                description: "الرجاء التوجه إلى قسم المدير المالي في الطابق الثالث" 
+            },
+            ninja: { 
+                name: "مشرفين نينجا", 
+                description: "الرجاء التوجه إلى قسم مشرفين نينجا في الطابق الثاني" 
+            },
+            keemart: { 
+                name: "مشرف كيمارت", 
+                description: "الرجاء التوجه إلى قسم مشرف كيمارت في الطابق الأول" 
+            },
+            vehicles: { 
+                name: "مسؤول المركبات", 
+                description: "الرجاء التوجه إلى قسم مسؤول المركبات في الطابق الأرضي" 
+            },
+            projects: { 
+                name: "مدير المشاريع التشغيلية", 
+                description: "الرجاء التوجه إلى قسم مدير المشاريع التشغيلية في الطابق الرابع" 
+            },
+            hr: { 
+                name: "مدير الموارد البشرية", 
+                description: "الرجاء التوجه إلى قسم مدير الموارد البشرية في الطابق الثالث" 
+            }
+        };
+        
+        // Function to convert numbers to Arabic-Indic digits
+        function toArabicDigits(number) {
+            const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+            return number.toString().replace(/\d/g, digit => arabicDigits[digit]);
+        }
+        
+        // Function to get department from URL parameter
+        function getDepartmentFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const dept = urlParams.get('dept');
+            
+            // Validate department
+            if (!dept || !departments[dept]) {
+                return 'finance'; // Default to finance if invalid
+            }
+            
+            return dept;
+        }
+        
+        // Function to generate new ticket number
+        async function generateTicketNumber(department) {
+            try {
+                // Show loading
+                loadingEl.classList.add('active');
+                
+                // Get last ticket number for this department
+                const deptRef = ref(db, `tickets/${department}`);
+                const snapshot = await get(deptRef);
+                
+                let newTicketNumber = 1001; // Starting number
+                
+                if (snapshot.exists()) {
+                    const tickets = snapshot.val();
+                    // Find the highest ticket number
+                    const ticketNumbers = Object.keys(tickets)
+                        .map(Number)
+                        .filter(num => !isNaN(num));
+                    
+                    if (ticketNumbers.length > 0) {
+                        const highestNumber = Math.max(...ticketNumbers);
+                        newTicketNumber = highestNumber + 1;
+                    }
+                }
+                
+                // Create new ticket in database
+                const newTicketRef = ref(db, `tickets/${department}/${newTicketNumber}`);
+                await set(newTicketRef, {
+                    number: newTicketNumber,
+                    department: department,
+                    status: "waiting",
+                    timestamp: Date.now(),
+                    createdAt: new Date().toISOString()
+                });
+                
+                // Return the new ticket number
+                return newTicketNumber;
+                
+            } catch (error) {
+                console.error("Error generating ticket:", error);
+                throw error;
+            }
+        }
+        
+        // Countdown timer
+        function startCountdown(seconds) {
+            let timeLeft = seconds;
+            countdownEl.textContent = timeLeft;
+            
+            const countdownInterval = setInterval(() => {
+                timeLeft--;
+                countdownEl.textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    // Try to close the window
+                    if (window.history.length > 1) {
+                        window.history.back();
+                    } else {
+                        window.close();
+                    }
+                }
+            }, 1000);
+        }
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async () => {
+            const department = getDepartmentFromURL();
+            
+            if (departments[department]) {
+                // Set department info
+                departmentNameEl.textContent = departments[department].name;
+                departmentDescriptionEl.textContent = departments[department].description;
+                
+                try {
+                    // Generate new ticket
+                    const ticketNumber = await generateTicketNumber(department);
+                    
+                    // Update UI
+                    ticketNumberEl.textContent = ticketNumber;
+                    ticketNumberArabicEl.textContent = toArabicDigits(ticketNumber);
+                    
+                    // Hide loading and show ticket info
+                    loadingEl.classList.remove('active');
+                    ticketInfoEl.classList.add('show');
+                    
+                    // Start countdown
+                    startCountdown(15);
+                    
+                } catch (error) {
+                    // Handle error
+                    loadingEl.classList.remove('active');
+                    ticketInfoEl.classList.add('show');
+                    ticketNumberEl.textContent = "خطأ";
+                    ticketNumberArabicEl.textContent = "خطأ";
+                    departmentNameEl.textContent = "خطأ في النظام";
+                    departmentDescriptionEl.textContent = "يرجى المحاولة مرة أخرى أو الاتصال بالدعم الفني";
+                    
+                    // Don't start countdown on error
+                    document.getElementById('countdown').style.display = 'none';
+                }
+            } else {
+                // Invalid department
+                loadingEl.classList.remove('active');
+                ticketInfoEl.classList.add('show');
+                departmentNameEl.textContent = "قسم غير صالح";
+                departmentDescriptionEl.textContent = "يرجى استخدام QR Code صالح";
+                ticketNumberEl.style.display = 'none';
+                ticketNumberArabicEl.style.display = 'none';
+                document.getElementById('countdown').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
