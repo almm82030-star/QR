@@ -8,15 +8,15 @@
   body { font-family: Arial, sans-serif; background: #f0f4f8; text-align: center; margin:0; padding:0;}
   #header { background: #004aad; color: white; padding: 20px; display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 6px rgba(0,0,0,0.2);}
   #header img { height: 80px; margin-right: 20px; }
-  #ticketDisplay { margin-top: 50px; }
+  #ticketDisplay { margin-top: 80px; }
   #ticket { font-size: 6em; font-weight: bold; color: #004aad; margin-bottom: 20px; }
-  #sectionName { font-size: 2.5em; color: #ff6f00; margin-bottom: 30px; }
-  #loginDiv, #actionDiv { margin-top: 30px; background: white; display:inline-block; padding:20px; border-radius:15px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);}
+  #sectionName { font-size: 2.5em; color: #ff6f00; margin-bottom: 50px; }
+  #loginDiv, #actionDiv { margin-top: 30px; display:inline-block; padding:20px; border-radius:15px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); background:white;}
   input { padding: 10px; margin:5px; font-size: 1em; border-radius:8px; border:1px solid #ccc; }
   button { padding: 10px 20px; margin: 10px; font-size: 1em; cursor:pointer; border:none; border-radius:8px; background:#004aad; color:white; transition: 0.3s; }
   button:hover { background:#002f6c; }
-  #loginDiv { display:block; }
-  #actionDiv { display:none; }
+  #loginDiv { display:none; } /* مخفي عن الشاشة */
+  #actionDiv { display:none; } /* مخفي عن الشاشة */
 </style>
 </head>
 <body>
@@ -31,7 +31,7 @@
   <div id="sectionName"></div>
 </div>
 
-<!-- قسم تسجيل الدخول الخاص بالمسؤول -->
+<!-- تسجيل الدخول منفصل عن الشاشة -->
 <div id="loginDiv">
   <h3>تسجيل الدخول للمسؤول</h3>
   <input type="text" id="username" placeholder="اسم المستخدم">
@@ -40,7 +40,7 @@
   <p id="loginMsg" style="color:red;"></p>
 </div>
 
-<!-- قسم اختيار التذكرة التالية بعد انتهاء المقابلة -->
+<!-- اختيار التذكرة التالية بعد انتهاء المقابلة -->
 <div id="actionDiv">
   <h3>اختر التذكرة التالية بعد انتهاء المقابلة:</h3>
   <input type="text" id="nextTicket" placeholder="رقم التذكرة">
@@ -64,11 +64,14 @@
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
+  // الأقسام مع بيانات المسؤول
   const sections = {
     finance: { ar: 'المدير المالي', en: 'Financial Manager', username:'finance', password:'00' },
     ninja: { ar: 'مشرفين نينجا', en: 'Ninja Supervisors', username:'ninja', password:'00' },
     keemart: { ar: 'مشرف كيمارت', en: 'Keemart Supervisor', username:'keemart', password:'00' },
-    vehicles: { ar: 'مسؤول المركبات', en: 'Vehicles Officer', username:'vehicles', password:'00' }
+    vehicles: { ar: 'مسؤول المركبات', en: 'Vehicles Officer', username:'vehicles', password:'00' },
+    projects: { ar: 'مدير المشاريع التشغيلية', en: 'Operational Projects Manager', username:'projects', password:'00' },
+    hr: { ar: 'مدير الموارد البشرية', en: 'HR Manager', username:'hr', password:'00' }
   };
 
   let ticketNumber = null;
@@ -91,10 +94,12 @@
   };
 
   function updateDisplay(ticket, section) {
-    displayDiv.innerText = ticket;
+    const arabicDigits = ticket.replace(/\d/g, d => String.fromCharCode(0x0660 + +d));
+    displayDiv.innerText = `${arabicDigits} / ${ticket}`;
     sectionDiv.innerText = section.ar;
   }
 
+  // الصوت بالعربي والإنجليزي
   function playAudio(ticket, section) {
     const utteranceAR = new SpeechSynthesisUtterance(`رقم ${ticket} يرجى التوجه إلى ${section.ar}`);
     utteranceAR.lang = 'ar-SA';
@@ -104,7 +109,7 @@
     speechSynthesis.speak(utteranceAR);
   }
 
-  // تسجيل الدخول
+  // تسجيل الدخول (مخفي)
   window.login = function() {
     const user = document.getElementById('username').value;
     const pass = document.getElementById('password').value;
@@ -126,14 +131,13 @@
     if(!next) return alert('ادخل رقم التذكرة التالية');
     if(!loggedInSection) return alert('لم يتم تسجيل الدخول');
     const sectionInfo = sections[loggedInSection];
-    // تحديث الشاشة والتغيير على Firebase
     set(ref(db, 'tickets/' + next), { section: loggedInSection, time: Date.now(), status:'approved' });
     updateDisplay(next, sectionInfo);
     playAudio(next, sectionInfo);
     document.getElementById('nextTicket').value = '';
   };
 
-  // تشغيل التذكرة تلقائيًا عند فتح الصفحة مع QR
+  // عند فتح الصفحة مع QR
   window.onload = function () {
     const params = new URLSearchParams(window.location.search);
     const dept = params.get('dept');
@@ -146,20 +150,12 @@
     const data = snapshot.val();
     if(!data) return;
     const keys = Object.keys(data);
-    // اعرض فقط آخر تذكرة بحالة approved
     const approvedKeys = keys.filter(k => data[k].status==='approved');
     if(approvedKeys.length===0) return;
     const lastKey = approvedKeys[approvedKeys.length-1];
     const lastSection = sections[data[lastKey].section];
-    displayDiv.innerText = lastKey;
-    sectionDiv.innerText = lastSection.ar;
-    // صوت النداء بالعربي والإنجليزي
-    const utteranceAR = new SpeechSynthesisUtterance(`رقم ${lastKey} يرجى التوجه إلى ${lastSection.ar}`);
-    utteranceAR.lang = 'ar-SA';
-    const utteranceEN = new SpeechSynthesisUtterance(`Ticket ${lastKey}, please proceed to ${lastSection.en}`);
-    utteranceEN.lang = 'en-US';
-    utteranceAR.onend = () => { speechSynthesis.speak(utteranceEN); };
-    speechSynthesis.speak(utteranceAR);
+    updateDisplay(lastKey, lastSection);
+    playAudio(lastKey, lastSection);
   });
 
 </script>
