@@ -48,15 +48,12 @@
   const db = getDatabase(app);
 
   let lang = 'ar';
-
   function setLang(l) {
     lang = l;
     if(ticketNumber && section) updateDisplay(ticketNumber, section);
   }
 
-  let ticketNumber = null;
-  let section = null;
-
+  // الأقسام
   const sections = {
     finance: { ar: 'المدير المالي', en: 'Financial Manager', prefix: 'F' },
     ninja: { ar: 'مشرفين نينجا', en: 'Ninja Supervisors', prefix: 'N' },
@@ -64,14 +61,17 @@
     vehicles: { ar: 'مسؤول المركبات', en: 'Vehicles Officer', prefix: 'V' }
   };
 
-  // محاكاة مسح QR
-  window.scanQR = function(sectionId) {
-    section = sections[sectionId];
+  let ticketNumber = null;
+  let section = null;
+
+  // تعريف scanQR عالميًا
+  window.scanQR = function(dept) {
+    section = sections[dept];
     ticketNumber = section.prefix + '-' + Math.floor(Math.random()*1000).toString().padStart(3,'0');
-    set(ref(db, 'tickets/' + ticketNumber), { section: sectionId, time: Date.now() });
+    set(ref(db, 'tickets/' + ticketNumber), { section: dept, time: Date.now() });
     updateDisplay(ticketNumber, section);
     playAudio(ticketNumber, section);
-  }
+  };
 
   function updateDisplay(ticket, section) {
     document.getElementById('ticket').innerText = lang==='ar' ? `رقم تذكرتك: ${ticket}` : `Your Ticket: ${ticket}`;
@@ -84,20 +84,27 @@
     speechSynthesis.speak(utterance);
   }
 
-  // تحديث الشاشة بشكل لحظي لجميع التذاكر الجديدة
+  // عند فتح الصفحة مع QR
+  window.onload = function () {
+    const params = new URLSearchParams(window.location.search);
+    const dept = params.get('dept');
+    if(dept && sections[dept]) {
+      scanQR(dept);
+    }
+  };
+
+  // تحديث لحظي للشاشة لكل التذاكر الجديدة
   const displayDiv = document.getElementById('ticket');
   const sectionDiv = document.getElementById('sectionName');
   const ticketsRef = ref(db, 'tickets');
   onValue(ticketsRef, (snapshot) => {
     const data = snapshot.val();
     if(!data) return;
-    // استعرض آخر تذكرة تم إضافتها
     const keys = Object.keys(data);
     const lastKey = keys[keys.length -1];
     const lastSection = sections[data[lastKey].section];
     displayDiv.innerText = lang==='ar' ? `رقم تذكرتك: ${lastKey}` : `Your Ticket: ${lastKey}`;
     sectionDiv.innerText = lang==='ar' ? `القسم: ${lastSection.ar}` : `Section: ${lastSection.en}`;
-    // صوت النداء تلقائي
     let msg = lang==='ar' ? `رقم ${lastKey} يرجى التوجه إلى ${lastSection.ar}` : `Ticket ${lastKey}, please proceed to ${lastSection.en}`;
     let utterance = new SpeechSynthesisUtterance(msg);
     speechSynthesis.speak(utterance);
@@ -106,3 +113,5 @@
 
 </body>
 </html>
+
+
