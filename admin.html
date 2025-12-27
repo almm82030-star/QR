@@ -1,165 +1,686 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>نظام تذاكر الزهراني لوجستيك</title>
-<style>
-  body { font-family: Arial, sans-serif; background: #f0f4f8; text-align: center; margin:0; padding:0;}
-  #header { background: #004aad; color: white; padding: 20px; display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 6px rgba(0,0,0,0.2);}
-  #header img { height: 80px; margin-right: 20px; }
-  #ticketDisplay { margin-top: 80px; }
-  #ticket { font-size: 6em; font-weight: bold; color: #004aad; margin-bottom: 20px; }
-  #sectionName { font-size: 2.5em; color: #ff6f00; margin-bottom: 50px; }
-  #loginDiv, #actionDiv { margin-top: 30px; display:inline-block; padding:20px; border-radius:15px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); background:white;}
-  input { padding: 10px; margin:5px; font-size: 1em; border-radius:8px; border:1px solid #ccc; }
-  button { padding: 10px 20px; margin: 10px; font-size: 1em; cursor:pointer; border:none; border-radius:8px; background:#004aad; color:white; transition: 0.3s; }
-  button:hover { background:#002f6c; }
-  #loginDiv { display:none; } /* مخفي عن الشاشة */
-  #actionDiv { display:none; } /* مخفي عن الشاشة */
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - نظام التذاكر | الزهراني لوجستيك</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            height: 70px;
+            max-width: 250px;
+            object-fit: contain;
+        }
+        
+        .company-name {
+            color: #1a237e;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .logout-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background-color: #d32f2f;
+            transform: translateY(-2px);
+        }
+        
+        .login-container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: 100px auto;
+            padding: 50px 40px;
+            text-align: center;
+        }
+        
+        .login-title {
+            color: #1a237e;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+        
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .form-group {
+            text-align: right;
+        }
+        
+        .form-label {
+            display: block;
+            color: #333;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            border-color: #1a237e;
+            outline: none;
+        }
+        
+        .login-btn {
+            background-color: #1a237e;
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 10px;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .login-btn:hover {
+            background-color: #283593;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(26, 35, 126, 0.2);
+        }
+        
+        .error-message {
+            color: #f44336;
+            font-size: 16px;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        .dashboard {
+            display: none;
+        }
+        
+        .dashboard.active {
+            display: block;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .welcome-message {
+            font-size: 28px;
+            color: #1a237e;
+            font-weight: 700;
+        }
+        
+        .current-time {
+            font-size: 20px;
+            color: #666;
+        }
+        
+        .current-ticket-section {
+            background-color: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        
+        .section-title {
+            color: #1a237e;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-align: right;
+        }
+        
+        .current-ticket-display {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            border-radius: 20px;
+            padding: 40px;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .current-ticket-label {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #e8eaf6;
+        }
+        
+        .current-ticket-number {
+            font-size: 100px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            direction: ltr;
+        }
+        
+        .current-ticket-department {
+            font-size: 36px;
+            font-weight: 700;
+            color: #ffd700;
+        }
+        
+        .next-ticket-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            border-radius: 15px;
+            font-size: 24px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px auto 0;
+            transition: all 0.3s ease;
+        }
+        
+        .next-ticket-btn:hover:not(:disabled) {
+            background-color: #388E3C;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .next-ticket-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .waiting-tickets-section {
+            background-color: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+        
+        .waiting-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .ticket-card {
+            background-color: #f5f7ff;
+            border-radius: 15px;
+            padding: 25px 20px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+        
+        .ticket-card:hover {
+            border-color: #1a237e;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(26, 35, 126, 0.1);
+        }
+        
+        .ticket-card-number {
+            font-size: 36px;
+            font-weight: 900;
+            color: #1a237e;
+            margin-bottom: 10px;
+            direction: ltr;
+        }
+        
+        .ticket-card-time {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .no-tickets {
+            text-align: center;
+            color: #777;
+            font-size: 20px;
+            padding: 40px 20px;
+            grid-column: 1 / -1;
+        }
+        
+        .loading {
+            display: none;
+            margin: 20px 0;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #1a237e;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+                padding: 20px;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .current-ticket-number {
+                font-size: 70px;
+            }
+            
+            .current-ticket-department {
+                font-size: 28px;
+            }
+            
+            .waiting-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Login Screen -->
+    <div class="container">
+        <div class="login-container" id="loginContainer">
+            <div class="header">
+                <img src="https://i.ibb.co/1GHY3whz/bsxB90Z.png" alt="شعار شركة الزهراني لوجستيك" class="logo">
+                <div class="company-name">الزهراني لوجستيك</div>
+            </div>
+            
+            <h1 class="login-title">تسجيل الدخول للمسؤولين</h1>
+            
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="username">اسم المستخدم</label>
+                    <input type="text" id="username" class="form-input" placeholder="أدخل اسم المستخدم" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="password">كلمة المرور</label>
+                    <input type="password" id="password" class="form-input" placeholder="أدخل كلمة المرور" required>
+                </div>
+                
+                <div class="error-message" id="errorMessage">اسم المستخدم أو كلمة المرور غير صحيحة</div>
+                
+                <button type="submit" class="login-btn">دخول النظام</button>
+            </form>
+        </div>
+        
+        <!-- Dashboard (hidden until login) -->
+        <div class="dashboard" id="dashboard">
+            <div class="header">
+                <div class="company-name">لوحة تحكم نظام التذاكر</div>
+                <img src="https://i.ibb.co/1GHY3whz/bsxB90Z.png" alt="شعار شركة الزهراني لوجستيك" class="logo">
+                <button class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    تسجيل الخروج
+                </button>
+            </div>
+            
+            <div class="dashboard-header">
+                <h1 class="welcome-message" id="welcomeMessage">مرحبًا، المدير المالي</h1>
+                <div class="current-time" id="currentTime">الوقت الحالي: 10:30 ص</div>
+            </div>
+            
+            <div class="current-ticket-section">
+                <h2 class="section-title">التذكرة الحالية المعروضة</h2>
+                
+                <div class="current-ticket-display">
+                    <div class="current-ticket-label">التذكرة الحالية</div>
+                    <div class="current-ticket-number" id="currentTicketDisplay">1001</div>
+                    <div class="current-ticket-department" id="currentDepartmentDisplay">المدير المالي</div>
+                </div>
+                
+                <div class="loading" id="nextTicketLoading">
+                    <div class="spinner"></div>
+                    <p>جاري استدعاء التذكرة التالية...</p>
+                </div>
+                
+                <button class="next-ticket-btn" id="nextTicketBtn">
+                    <i class="fas fa-forward"></i>
+                    استدعاء التذكرة التالية
+                </button>
+            </div>
+            
+            <div class="waiting-tickets-section">
+                <h2 class="section-title">التذاكر المنتظرة في قسمك</h2>
+                
+                <div class="waiting-list" id="waitingList">
+                    <!-- Tickets will be loaded here dynamically -->
+                    <div class="no-tickets" id="noTicketsMessage">
+                        <i class="fas fa-ticket-alt" style="font-size: 48px; margin-bottom: 15px; color: #ccc;"></i>
+                        <p>لا توجد تذاكر منتظرة حاليًا</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+        import { getDatabase, ref, set, get, update, onValue, query, orderByChild } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
-<div id="header">
-  <img src="https://i.ibb.co/1GHY3whz/bsxB90Z.png" alt="شعار الشركة">
-  <h1>نظام التذاكر</h1>
-</div>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAtvZC_Ztg8lVbOUaMl8f268RBnskq3qM0",
+            authDomain: "zah123-cd263.firebaseapp.com",
+            projectId: "zah123-cd263",
+            storageBucket: "zah123-cd263.firebasestorage.app",
+            messagingSenderId: "978446441946",
+            appId: "1:978446441946:web:d3a1183239d86c81ecf4e3",
+            databaseURL: "https://zah123-cd263-default-rtdb.firebaseio.com/"
+        };
 
-<div id="ticketDisplay">
-  <div id="ticket">امسح الباركود للبدء</div>
-  <div id="sectionName"></div>
-</div>
-
-<!-- تسجيل الدخول منفصل عن الشاشة -->
-<div id="loginDiv">
-  <h3>تسجيل الدخول للمسؤول</h3>
-  <input type="text" id="username" placeholder="اسم المستخدم">
-  <input type="password" id="password" placeholder="كلمة المرور">
-  <button onclick="login()">تسجيل الدخول</button>
-  <p id="loginMsg" style="color:red;"></p>
-</div>
-
-<!-- اختيار التذكرة التالية بعد انتهاء المقابلة -->
-<div id="actionDiv">
-  <h3>اختر التذكرة التالية بعد انتهاء المقابلة:</h3>
-  <input type="text" id="nextTicket" placeholder="رقم التذكرة">
-  <button onclick="nextTicketFunc()">اعتماد التذكرة</button>
-</div>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyAtvZC_Ztg8lVbOUaMl8f268RBnskq3qM0",
-    authDomain: "zah123-cd263.firebaseapp.com",
-    databaseURL: "https://zah123-cd263-default-rtdb.firebaseio.com",
-    projectId: "zah123-cd263",
-    storageBucket: "zah123-cd263.appspot.com",
-    messagingSenderId: "978446441946",
-    appId: "1:978446441946:web:d3a1183239d86c81ecf4e3"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-
-  // الأقسام مع بيانات المسؤول
-  const sections = {
-    finance: { ar: 'المدير المالي', en: 'Financial Manager', username:'finance', password:'00' },
-    ninja: { ar: 'مشرفين نينجا', en: 'Ninja Supervisors', username:'ninja', password:'00' },
-    keemart: { ar: 'مشرف كيمارت', en: 'Keemart Supervisor', username:'keemart', password:'00' },
-    vehicles: { ar: 'مسؤول المركبات', en: 'Vehicles Officer', username:'vehicles', password:'00' },
-    projects: { ar: 'مدير المشاريع التشغيلية', en: 'Operational Projects Manager', username:'projects', password:'00' },
-    hr: { ar: 'مدير الموارد البشرية', en: 'HR Manager', username:'hr', password:'00' }
-  };
-
-  let ticketNumber = null;
-  let section = null;
-  let loggedInSection = null;
-
-  const displayDiv = document.getElementById('ticket');
-  const sectionDiv = document.getElementById('sectionName');
-  const loginDiv = document.getElementById('loginDiv');
-  const actionDiv = document.getElementById('actionDiv');
-  const loginMsg = document.getElementById('loginMsg');
-
-  // توليد تذكرة من QR
-  window.scanQR = function(dept) {
-    section = sections[dept];
-    ticketNumber = Math.floor(Math.random()*9000)+1000; // 4 أرقام فقط
-    set(ref(db, 'tickets/' + ticketNumber), { section: dept, time: Date.now(), status:'waiting' });
-    updateDisplay(ticketNumber, section);
-    playAudio(ticketNumber, section);
-  };
-
-  function updateDisplay(ticket, section) {
-    const arabicDigits = ticket.replace(/\d/g, d => String.fromCharCode(0x0660 + +d));
-    displayDiv.innerText = `${arabicDigits} / ${ticket}`;
-    sectionDiv.innerText = section.ar;
-  }
-
-  // الصوت بالعربي والإنجليزي
-  function playAudio(ticket, section) {
-    const utteranceAR = new SpeechSynthesisUtterance(`رقم ${ticket} يرجى التوجه إلى ${section.ar}`);
-    utteranceAR.lang = 'ar-SA';
-    const utteranceEN = new SpeechSynthesisUtterance(`Ticket ${ticket}, please proceed to ${section.en}`);
-    utteranceEN.lang = 'en-US';
-    utteranceAR.onend = () => { speechSynthesis.speak(utteranceEN); };
-    speechSynthesis.speak(utteranceAR);
-  }
-
-  // تسجيل الدخول (مخفي)
-  window.login = function() {
-    const user = document.getElementById('username').value;
-    const pass = document.getElementById('password').value;
-    for(const key in sections){
-      if(sections[key].username===user && sections[key].password===pass){
-        loggedInSection = key;
-        loginDiv.style.display='none';
-        actionDiv.style.display='block';
-        loginMsg.innerText='';
-        return;
-      }
-    }
-    loginMsg.innerText='اسم المستخدم أو كلمة المرور خاطئة';
-  };
-
-  // اعتماد التذكرة التالية بعد المقابلة
-  window.nextTicketFunc = function() {
-    const next = document.getElementById('nextTicket').value.trim();
-    if(!next) return alert('ادخل رقم التذكرة التالية');
-    if(!loggedInSection) return alert('لم يتم تسجيل الدخول');
-    const sectionInfo = sections[loggedInSection];
-    set(ref(db, 'tickets/' + next), { section: loggedInSection, time: Date.now(), status:'approved' });
-    updateDisplay(next, sectionInfo);
-    playAudio(next, sectionInfo);
-    document.getElementById('nextTicket').value = '';
-  };
-
-  // عند فتح الصفحة مع QR
-  window.onload = function () {
-    const params = new URLSearchParams(window.location.search);
-    const dept = params.get('dept');
-    if(dept && sections[dept]) scanQR(dept);
-  };
-
-  // تحديث لحظي لجميع التذاكر الجديدة
-  const ticketsRef = ref(db, 'tickets');
-  onValue(ticketsRef, (snapshot) => {
-    const data = snapshot.val();
-    if(!data) return;
-    const keys = Object.keys(data);
-    const approvedKeys = keys.filter(k => data[k].status==='approved');
-    if(approvedKeys.length===0) return;
-    const lastKey = approvedKeys[approvedKeys.length-1];
-    const lastSection = sections[data[lastKey].section];
-    updateDisplay(lastKey, lastSection);
-    playAudio(lastKey, lastSection);
-  });
-
-</script>
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        
+        // DOM elements
+        const loginContainer = document.getElementById('loginContainer');
+        const loginForm = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const dashboard = document.getElementById('dashboard');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const currentTimeEl = document.getElementById('currentTime');
+        const currentTicketDisplay = document.getElementById('currentTicketDisplay');
+        const currentDepartmentDisplay = document.getElementById('currentDepartmentDisplay');
+        const nextTicketBtn = document.getElementById('nextTicketBtn');
+        const nextTicketLoading = document.getElementById('nextTicketLoading');
+        const waitingList = document.getElementById('waitingList');
+        const noTicketsMessage = document.getElementById('noTicketsMessage');
+        
+        // Login credentials
+        const credentials = {
+            finance: { username: 'finance', password: '00', department: 'finance', name: 'المدير المالي' },
+            ninja: { username: 'ninja', password: '00', department: 'ninja', name: 'مشرفين نينجا' },
+            keemart: { username: 'keemart', password: '00', department: 'keemart', name: 'مشرف كيمارت' },
+            vehicles: { username: 'vehicles', password: '00', department: 'vehicles', name: 'مسؤول المركبات' },
+            projects: { username: 'projects', password: '00', department: 'projects', name: 'مدير المشاريع التشغيلية' },
+            hr: { username: 'hr', password: '00', department: 'hr', name: 'مدير الموارد البشرية' }
+        };
+        
+        // Departments mapping
+        const departments = {
+            finance: "المدير المالي",
+            ninja: "مشرفين نينجا",
+            keemart: "مشرف كيمارت",
+            vehicles: "مسؤول المركبات",
+            projects: "مدير المشاريع التشغيلية",
+            hr: "مدير الموارد البشرية"
+        };
+        
+        // Current user state
+        let currentUser = null;
+        let waitingTickets = [];
+        
+        // Function to update current time
+        function updateCurrentTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('ar-SA');
+            currentTimeEl.textContent = `الوقت الحالي: ${timeString}`;
+        }
+        
+        // Function to convert numbers to Arabic-Indic digits
+        function toArabicDigits(number) {
+            const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+            return number.toString().replace(/\d/g, digit => arabicDigits[digit]);
+        }
+        
+        // Login function
+        function login(username, password) {
+            // Check credentials
+            for (const key in credentials) {
+                const user = credentials[key];
+                if (user.username === username && user.password === password) {
+                    currentUser = user;
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        // Load waiting tickets for current department
+        async function loadWaitingTickets() {
+            if (!currentUser) return;
+            
+            try {
+                const deptRef = ref(db, `tickets/${currentUser.department}`);
+                const snapshot = await get(deptRef);
+                
+                waitingTickets = [];
+                
+                if (snapshot.exists()) {
+                    const tickets = snapshot.val();
+                    
+                    // Convert to array and filter waiting tickets
+                    for (const ticketNumber in tickets) {
+                        const ticket = tickets[ticketNumber];
+                        if (ticket.status === "waiting") {
+                            waitingTickets.push({
+                                number: parseInt(ticketNumber),
+                                department: ticket.department,
+                                timestamp: ticket.timestamp || 0
+                            });
+                        }
+                    }
+                    
+                    // Sort by ticket number (ascending)
+                    waitingTickets.sort((a, b) => a.number - b.number);
+                }
+                
+                // Update UI
+                updateWaitingTicketsUI();
+                
+            } catch (error) {
+                console.error("Error loading waiting tickets:", error);
+            }
+        }
+        
+        // Update waiting tickets UI
+        function updateWaitingTicketsUI() {
+            waitingList.innerHTML = '';
+            
+            if (waitingTickets.length === 0) {
+                noTicketsMessage.style.display = 'block';
+                return;
+            }
+            
+            noTicketsMessage.style.display = 'none';
+            
+            waitingTickets.forEach(ticket => {
+                const ticketCard = document.createElement('div');
+                ticketCard.className = 'ticket-card';
+                
+                const ticketTime = ticket.timestamp ? 
+                    new Date(ticket.timestamp).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' }) : 
+                    '--:--';
+                
+                ticketCard.innerHTML = `
+                    <div class="ticket-card-number">${ticket.number}</div>
+                    <div class="ticket-card-time">${toArabicDigits(ticketTime)}</div>
+                `;
+                
+                waitingList.appendChild(ticketCard);
+            });
+        }
+        
+        // Call next ticket
+        async function callNextTicket() {
+            if (!currentUser || waitingTickets.length === 0) {
+                alert("لا توجد تذاكر منتظرة في قسمك");
+                return;
+            }
+            
+            // Disable button and show loading
+            nextTicketBtn.disabled = true;
+            nextTicketLoading.classList.add('active');
+            
+            try {
+                // Get the next ticket (lowest number)
+                const nextTicket = waitingTickets[0];
+                
+                // Update ticket status in database
+                const ticketRef = ref(db, `tickets/${currentUser.department}/${nextTicket.number}`);
+                await update(ticketRef, { status: "approved" });
+                
+                // Update current ticket display in database
+                const currentTicketRef = ref(db, 'currentTicket');
+                await set(currentTicketRef, {
+                    ticketNumber: nextTicket.number,
+                    department: currentUser.department
+                });
+                
+                // Reload waiting tickets
+                await loadWaitingTickets();
+                
+                // Update current ticket display
+                currentTicketDisplay.textContent = nextTicket.number;
+                currentDepartmentDisplay.textContent = departments[currentUser.department];
+                
+            } catch (error) {
+                console.error("Error calling next ticket:", error);
+                alert("حدث خطأ أثناء استدعاء التذكرة التالية");
+            } finally {
+                // Re-enable button and hide loading
+                nextTicketBtn.disabled = false;
+                nextTicketLoading.classList.remove('active');
+            }
+        }
+        
+        // Listen for current ticket changes
+        function listenForCurrentTicket() {
+            const currentTicketRef = ref(db, 'currentTicket');
+            onValue(currentTicketRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data && data.department === currentUser.department) {
+                    currentTicketDisplay.textContent = data.ticketNumber;
+                    currentDepartmentDisplay.textContent = departments[data.department];
+                }
+            });
+        }
+        
+        // Event Listeners
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (login(username, password)) {
+                // Successful login
+                errorMessage.classList.remove('show');
+                loginContainer.style.display = 'none';
+                dashboard.classList.add('active');
+                
+                // Update welcome message
+                welcomeMessage.textContent = `مرحبًا، ${currentUser.name}`;
+                
+                // Start updating time
+                updateCurrentTime();
+                setInterval(updateCurrentTime, 1000);
+                
+                // Load waiting tickets
+                loadWaitingTickets();
+                
+                // Listen for current ticket
+                listenForCurrentTicket();
+                
+                // Load current ticket on startup
+                const currentTicketRef = ref(db, 'currentTicket');
+                get(currentTicketRef).then(snapshot => {
+                    const data = snapshot.val();
+                    if (data && data.department === currentUser.department) {
+                        currentTicketDisplay.textContent = data.ticketNumber;
+                        currentDepartmentDisplay.textContent = departments[data.department];
+                    }
+                });
+                
+            } else {
+                // Failed login
+                errorMessage.classList.add('show');
+            }
+        });
+        
+        logoutBtn.addEventListener('click', () => {
+            currentUser = null;
+            dashboard.classList.remove('active');
+            loginContainer.style.display = 'block';
+            loginForm.reset();
+        });
+        
+        nextTicketBtn.addEventListener('click', callNextTicket);
+        
+        // Initialize
+        updateCurrentTime();
+    </script>
 </body>
 </html>
-
-
