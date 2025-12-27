@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نظام تذاكر الزهراني لوجستيك</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f2f2f2; text-align: center; margin:0; padding:0;}
+  #header { background: #004aad; color: white; padding: 20px; display:flex; align-items:center; justify-content:center;}
+  #header img { height: 80px; margin-right: 20px; }
+  #ticket { font-size: 3em; margin-top: 50px; }
+  #sectionName { font-size: 2em; margin-top: 20px; }
+  button { padding: 10px 20px; margin: 10px; font-size: 1em; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <img src="https://i.ibb.co/1GHY3whz/bsxB90Z.png" alt="شعار الشركة">
+  <h1>نظام التذاكر</h1>
+</div>
+
+<div>
+  <label>اختر اللغة:</label>
+  <button onclick="setLang('ar')">🇸🇦 عربي</button>
+  <button onclick="setLang('en')">🇬🇧 English</button>
+</div>
+
+<div id="ticket">امسح الباركود للبدء</div>
+<div id="sectionName"></div>
+
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAtvZC_Ztg8lVbOUaMl8f268RBnskq3qM0",
+    authDomain: "zah123-cd263.firebaseapp.com",
+    databaseURL: "https://zah123-cd263-default-rtdb.firebaseio.com",
+    projectId: "zah123-cd263",
+    storageBucket: "zah123-cd263.appspot.com",
+    messagingSenderId: "978446441946",
+    appId: "1:978446441946:web:d3a1183239d86c81ecf4e3"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  let lang = 'ar';
+
+  function setLang(l) {
+    lang = l;
+    if(ticketNumber && section) updateDisplay(ticketNumber, section);
+  }
+
+  let ticketNumber = null;
+  let section = null;
+
+  const sections = {
+    finance: { ar: 'المدير المالي', en: 'Financial Manager', prefix: 'F' },
+    ninja: { ar: 'مشرفين نينجا', en: 'Ninja Supervisors', prefix: 'N' },
+    keemart: { ar: 'مشرف كيمارت', en: 'Keemart Supervisor', prefix: 'K' },
+    vehicles: { ar: 'مسؤول المركبات', en: 'Vehicles Officer', prefix: 'V' }
+  };
+
+  // محاكاة مسح QR
+  window.scanQR = function(sectionId) {
+    section = sections[sectionId];
+    ticketNumber = section.prefix + '-' + Math.floor(Math.random()*1000).toString().padStart(3,'0');
+    set(ref(db, 'tickets/' + ticketNumber), { section: sectionId, time: Date.now() });
+    updateDisplay(ticketNumber, section);
+    playAudio(ticketNumber, section);
+  }
+
+  function updateDisplay(ticket, section) {
+    document.getElementById('ticket').innerText = lang==='ar' ? `رقم تذكرتك: ${ticket}` : `Your Ticket: ${ticket}`;
+    document.getElementById('sectionName').innerText = lang==='ar' ? `القسم: ${section.ar}` : `Section: ${section.en}`;
+  }
+
+  function playAudio(ticket, section) {
+    let msg = lang==='ar' ? `رقم ${ticket} يرجى التوجه إلى ${section.ar}` : `Ticket ${ticket}, please proceed to ${section.en}`;
+    let utterance = new SpeechSynthesisUtterance(msg);
+    speechSynthesis.speak(utterance);
+  }
+
+  // تحديث الشاشة بشكل لحظي لجميع التذاكر الجديدة
+  const displayDiv = document.getElementById('ticket');
+  const sectionDiv = document.getElementById('sectionName');
+  const ticketsRef = ref(db, 'tickets');
+  onValue(ticketsRef, (snapshot) => {
+    const data = snapshot.val();
+    if(!data) return;
+    // استعرض آخر تذكرة تم إضافتها
+    const keys = Object.keys(data);
+    const lastKey = keys[keys.length -1];
+    const lastSection = sections[data[lastKey].section];
+    displayDiv.innerText = lang==='ar' ? `رقم تذكرتك: ${lastKey}` : `Your Ticket: ${lastKey}`;
+    sectionDiv.innerText = lang==='ar' ? `القسم: ${lastSection.ar}` : `Section: ${lastSection.en}`;
+    // صوت النداء تلقائي
+    let msg = lang==='ar' ? `رقم ${lastKey} يرجى التوجه إلى ${lastSection.ar}` : `Ticket ${lastKey}, please proceed to ${lastSection.en}`;
+    let utterance = new SpeechSynthesisUtterance(msg);
+    speechSynthesis.speak(utterance);
+  });
+</script>
+
+</body>
+</html>
