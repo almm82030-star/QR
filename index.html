@@ -29,7 +29,6 @@
 <div id="ticket">امسح الباركود للبدء</div>
 <div id="sectionName"></div>
 
-<!-- Firebase -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
   import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
@@ -78,10 +77,22 @@
     document.getElementById('sectionName').innerText = lang==='ar' ? `القسم: ${section.ar}` : `Section: ${section.en}`;
   }
 
+  // دالة الصوت بالعربي والإنجليزي متتابع
   function playAudio(ticket, section) {
-    let msg = lang==='ar' ? `رقم ${ticket} يرجى التوجه إلى ${section.ar}` : `Ticket ${ticket}, please proceed to ${section.en}`;
-    let utterance = new SpeechSynthesisUtterance(msg);
-    speechSynthesis.speak(utterance);
+    const msgAR = `رقم ${ticket} يرجى التوجه إلى ${section.ar}`;
+    const utteranceAR = new SpeechSynthesisUtterance(msgAR);
+    utteranceAR.lang = 'ar-SA';
+
+    const msgEN = `Ticket ${ticket}, please proceed to ${section.en}`;
+    const utteranceEN = new SpeechSynthesisUtterance(msgEN);
+    utteranceEN.lang = 'en-US';
+
+    // تشغيل العربي ثم الإنجليزي تلقائيًا
+    utteranceAR.onend = () => {
+      speechSynthesis.speak(utteranceEN);
+    };
+
+    speechSynthesis.speak(utteranceAR);
   }
 
   // عند فتح الصفحة مع QR
@@ -105,13 +116,15 @@
     const lastSection = sections[data[lastKey].section];
     displayDiv.innerText = lang==='ar' ? `رقم تذكرتك: ${lastKey}` : `Your Ticket: ${lastKey}`;
     sectionDiv.innerText = lang==='ar' ? `القسم: ${lastSection.ar}` : `Section: ${lastSection.en}`;
-    let msg = lang==='ar' ? `رقم ${lastKey} يرجى التوجه إلى ${lastSection.ar}` : `Ticket ${lastKey}, please proceed to ${lastSection.en}`;
-    let utterance = new SpeechSynthesisUtterance(msg);
-    speechSynthesis.speak(utterance);
+    // صوت النداء بالعربي والإنجليزي
+    const utteranceAR = new SpeechSynthesisUtterance(`رقم ${lastKey} يرجى التوجه إلى ${lastSection.ar}`);
+    utteranceAR.lang = 'ar-SA';
+    const utteranceEN = new SpeechSynthesisUtterance(`Ticket ${lastKey}, please proceed to ${lastSection.en}`);
+    utteranceEN.lang = 'en-US';
+    utteranceAR.onend = () => { speechSynthesis.speak(utteranceEN); };
+    speechSynthesis.speak(utteranceAR);
   });
 </script>
 
 </body>
 </html>
-
-
