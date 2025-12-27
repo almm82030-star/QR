@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تذكرة جديدة | الزهراني لوجستيك</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-blue: #1a237e;
@@ -24,83 +24,196 @@
             font-family: 'Cairo', sans-serif;
         }
         
+        /* إجبار الوضع الأفقي */
         body {
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
+            width: 100vw;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 5vh 5vw;
+            padding: 2vh 2vw;
+            overflow: hidden;
+            transform-origin: center center;
         }
         
+        /* إجبار الشاشة الأفقية */
+        @media screen and (orientation: portrait) {
+            body {
+                transform: rotate(90deg);
+                transform-origin: center center;
+                width: 100vh;
+                height: 100vw;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                margin: auto;
+            }
+        }
+        
+        /* الحاوية الرئيسية للوضع الأفقي */
         .ticket-container {
             background-color: var(--white);
             border-radius: 3vh;
             box-shadow: 0 2vh 4vh rgba(0, 0, 0, 0.15);
-            width: 100%;
-            max-width: 90vw;
+            width: 96vw;
+            height: 90vh;
+            display: flex;
+            flex-direction: row;
             overflow: hidden;
-            text-align: center;
-            padding: 5vh 4vw;
             border: 0.5vh solid var(--accent-gold);
         }
         
-        .header-section {
+        /* الجانب الأيسر (المعلومات الأساسية) */
+        .left-section {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            color: var(--white);
+            padding: 4vh 3vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .logo {
+            height: 12vh;
+            max-width: 80%;
+            object-fit: contain;
+            margin-bottom: 3vh;
+        }
+        
+        .company-name {
+            font-size: clamp(2.5rem, 4vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1vh;
+            color: var(--accent-gold);
+        }
+        
+        .system-name {
+            font-size: clamp(1.2rem, 2vw, 2.5rem);
+            font-weight: 500;
+            color: var(--light-blue);
+            margin-bottom: 5vh;
+        }
+        
+        .success-icon {
+            font-size: clamp(8rem, 12vw, 15rem);
+            color: var(--accent-gold);
+            margin: 3vh 0;
+            text-shadow: 0.3vh 0.3vh 0.6vh rgba(0, 0, 0, 0.3);
+        }
+        
+        .success-title {
+            font-size: clamp(2rem, 3.5vw, 4.5rem);
+            font-weight: 800;
+            margin-bottom: 2vh;
+        }
+        
+        .success-subtitle {
+            font-size: clamp(1.2rem, 2vw, 2.5rem);
+            font-weight: 400;
+            color: var(--light-blue);
+            max-width: 80%;
+            line-height: 1.6;
+        }
+        
+        /* الجانب الأيمن (تفاصيل التذكرة) */
+        .right-section {
+            flex: 2;
+            padding: 4vh 3vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .ticket-header {
+            text-align: center;
             margin-bottom: 4vh;
             padding-bottom: 3vh;
             border-bottom: 0.3vh solid var(--light-blue);
         }
         
-        .logo {
-            height: 12vh;
-            max-width: 40vw;
-            object-fit: contain;
-            margin-bottom: 2vh;
-        }
-        
-        .company-name {
-            color: var(--primary-blue);
-            font-size: clamp(2rem, 4vw, 4rem);
+        .ticket-number-main {
+            font-size: clamp(6rem, 10vw, 12rem);
             font-weight: 900;
-            margin-bottom: 1vh;
+            color: var(--primary-blue);
+            margin: 2vh 0;
+            direction: ltr;
+            text-shadow: 0.2vh 0.2vh 0.4vh rgba(0, 0, 0, 0.1);
         }
         
-        .system-name {
+        .ticket-number-arabic {
+            font-size: clamp(3rem, 6vw, 8rem);
             color: var(--secondary-blue);
-            font-size: clamp(1.2rem, 2vw, 2.2rem);
-            font-weight: 600;
-        }
-        
-        .success-section {
-            margin: 4vh 0;
-            padding: 3vh;
-            background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%);
-            border-radius: 2vh;
-        }
-        
-        .success-icon {
-            font-size: clamp(4rem, 8vw, 10rem);
-            color: var(--success-green);
-            margin-bottom: 2vh;
-        }
-        
-        .ticket-heading {
-            color: var(--text-dark);
-            font-size: clamp(1.8rem, 3.5vw, 4rem);
-            font-weight: 800;
-            margin-bottom: 1vh;
-        }
-        
-        .success-message {
-            color: #666;
-            font-size: clamp(1.2rem, 2vw, 2.2rem);
             margin-bottom: 3vh;
         }
         
+        /* قسم معلومات القسم */
+        .department-section {
+            background: linear-gradient(135deg, #f0f4ff 0%, #e8eaf6 100%);
+            border-radius: 2vh;
+            padding: 3vh;
+            margin: 3vh 0;
+            border-right: 0.5vh solid var(--accent-gold);
+        }
+        
+        .department-label {
+            font-size: clamp(1.2rem, 2vw, 2.5rem);
+            color: var(--secondary-blue);
+            margin-bottom: 1vh;
+            font-weight: 600;
+        }
+        
+        .department-name {
+            font-size: clamp(2rem, 3.5vw, 4.5rem);
+            font-weight: 800;
+            color: var(--primary-blue);
+            margin-bottom: 2vh;
+        }
+        
+        .department-description {
+            color: #666;
+            font-size: clamp(1rem, 1.8vw, 2.2rem);
+            line-height: 1.6;
+        }
+        
+        /* قسم التعليمات */
+        .instructions-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2vh;
+            margin: 3vh 0;
+        }
+        
+        .instruction-card {
+            background-color: #fff8e1;
+            padding: 2vh;
+            border-radius: 1.5vh;
+            text-align: center;
+            border-right: 0.4vh solid #ffb300;
+        }
+        
+        .instruction-icon {
+            font-size: clamp(2rem, 3.5vw, 4rem);
+            color: #ff8f00;
+            margin-bottom: 1.5vh;
+        }
+        
+        .instruction-text {
+            color: #5d4037;
+            font-size: clamp(0.9rem, 1.6vw, 2rem);
+            font-weight: 600;
+        }
+        
+        /* قسم التحميل */
         .loading {
             display: none;
+            text-align: center;
             margin: 4vh 0;
-            padding: 3vh;
         }
         
         .loading.active {
@@ -108,13 +221,13 @@
         }
         
         .spinner {
-            border: 0.8vh solid #f3f3f3;
-            border-top: 0.8vh solid var(--primary-blue);
+            border: 1vh solid #f3f3f3;
+            border-top: 1vh solid var(--primary-blue);
             border-radius: 50%;
-            width: 8vh;
-            height: 8vh;
+            width: 10vh;
+            height: 10vh;
             animation: spin 1s linear infinite;
-            margin: 0 auto 2vh;
+            margin: 0 auto 3vh;
         }
         
         @keyframes spin {
@@ -122,12 +235,141 @@
             100% { transform: rotate(360deg); }
         }
         
-        .ticket-info {
-            margin: 4vh 0;
-            display: none;
+        .loading-text {
+            font-size: clamp(1.2rem, 2vw, 2.5rem);
+            color: var(--primary-blue);
+            font-weight: 600;
         }
         
-        .ticket-info.show {
+        /* معلومات الانتظار */
+        .waiting-info {
+            background-color: #e8f5e9;
+            border-radius: 2vh;
+            padding: 2.5vh;
+            margin-top: 3vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2vw;
+            border-right: 0.5vh solid #4CAF50;
+        }
+        
+        .waiting-icon {
+            color: #4CAF50;
+            font-size: clamp(2rem, 3vw, 3.5rem);
+        }
+        
+        .waiting-text {
+            color: #2e7d32;
+            font-size: clamp(1rem, 1.8vw, 2.2rem);
+            font-weight: 700;
+        }
+        
+        /* المؤقت العد التنازلي */
+        .countdown-section {
+            text-align: center;
+            margin-top: 4vh;
+            padding-top: 3vh;
+            border-top: 0.2vh solid #eee;
+        }
+        
+        .countdown-text {
+            font-size: clamp(1rem, 1.8vw, 2.2rem);
+            color: #666;
+            margin-bottom: 1vh;
+        }
+        
+        .countdown-timer {
+            font-size: clamp(2rem, 3.5vw, 4.5rem);
+            font-weight: 900;
+            color: var(--primary-blue);
+            direction: ltr;
+        }
+        
+        /* الفوتر */
+        .footer {
+            position: absolute;
+            bottom: 2vh;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: #777;
+            font-size: clamp(0.8rem, 1.4vw, 1.6rem);
+            padding: 0 3vw;
+        }
+        
+        /* تحسينات للشاشات الصغيرة في الوضع الأفقي */
+        @media screen and (max-width: 1024px) {
+            .ticket-container {
+                flex-direction: column;
+                height: auto;
+                min-height: 90vh;
+            }
+            
+            .left-section {
+                padding: 3vh 2vw;
+            }
+            
+            .right-section {
+                padding: 3vh 2vw;
+            }
+            
+            .instructions-section {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media screen and (max-height: 600px) {
+            .ticket-container {
+                height: 95vh;
+            }
+            
+            .left-section {
+                padding: 2vh 1.5vw;
+            }
+            
+            .right-section {
+                padding: 2vh 1.5vw;
+            }
+            
+            .success-icon {
+                font-size: clamp(4rem, 8vw, 10rem);
+            }
+            
+            .ticket-number-main {
+                font-size: clamp(4rem, 7vw, 9rem);
+            }
+        }
+        
+        /* رسالة خطأ */
+        .error-message {
+            display: none;
+            background-color: #ffebee;
+            color: #d32f2f;
+            padding: 3vh;
+            border-radius: 1.5vh;
+            text-align: center;
+            margin: 3vh 0;
+            border-right: 0.5vh solid #d32f2f;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        /* رسالة نجاح */
+        .success-message {
+            display: none;
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            padding: 3vh;
+            border-radius: 1.5vh;
+            text-align: center;
+            margin: 3vh 0;
+            border-right: 0.5vh solid #4CAF50;
+        }
+        
+        .success-message.show {
             display: block;
             animation: fadeIn 0.5s ease-out;
         }
@@ -137,226 +379,135 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        .ticket-number-display {
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
-            border-radius: 2vh;
-            padding: 4vh;
-            margin: 3vh 0;
-            color: var(--white);
-            box-shadow: 0 1vh 2vh rgba(26, 35, 126, 0.3);
+        /* تأثيرات عند تحميل التذكرة */
+        .ticket-loaded .ticket-number-main {
+            animation: pulse 1.5s ease-in-out;
         }
         
-        .ticket-number-label {
-            font-size: clamp(1.5rem, 2.5vw, 3rem);
-            margin-bottom: 2vh;
-            color: var(--light-blue);
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
         
-        .ticket-number {
-            font-size: clamp(4rem, 10vw, 12rem);
-            font-weight: 900;
-            margin: 2vh 0;
-            direction: ltr;
-            color: var(--accent-gold);
-            text-shadow: 0.2vh 0.2vh 0.4vh rgba(0, 0, 0, 0.3);
-        }
-        
-        .ticket-number-arabic {
-            font-size: clamp(2.5rem, 6vw, 8rem);
-            color: var(--light-blue);
-            margin-top: 1vh;
-        }
-        
-        .department-info {
-            background-color: var(--light-blue);
-            padding: 3vh;
-            border-radius: 2vh;
-            margin: 4vh 0;
-            border-right: 0.5vh solid var(--accent-gold);
-        }
-        
-        .department-label {
-            font-size: clamp(1.2rem, 2vw, 2.2rem);
-            color: var(--secondary-blue);
-            margin-bottom: 1vh;
-            font-weight: 600;
-        }
-        
-        .department-name {
-            font-size: clamp(1.8rem, 3.5vw, 4rem);
-            font-weight: 800;
-            color: var(--primary-blue);
-            margin-bottom: 1vh;
-        }
-        
-        .department-description {
-            color: #666;
-            font-size: clamp(1rem, 1.8vw, 2rem);
-            line-height: 1.6;
-        }
-        
-        .instructions {
-            background-color: #fff8e1;
-            padding: 3vh;
-            border-radius: 2vh;
-            margin: 4vh 0;
-            border-right: 0.5vh solid #ffb300;
-        }
-        
-        .instructions h3 {
-            color: #ff8f00;
-            font-size: clamp(1.5rem, 2.5vw, 3rem);
-            margin-bottom: 2vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1vw;
-        }
-        
-        .instructions-list {
-            text-align: right;
-            padding-right: 3vw;
-            color: #5d4037;
-            font-size: clamp(1rem, 1.8vw, 2rem);
-        }
-        
-        .instructions-list li {
-            margin-bottom: 1.5vh;
-            line-height: 1.5;
-        }
-        
-        .waiting-time {
-            background-color: #e8f5e9;
-            padding: 2vh 3vh;
-            border-radius: 1.5vh;
-            margin-top: 3vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 2vw;
-            border-right: 0.4vh solid #4CAF50;
-        }
-        
-        .waiting-time i {
-            color: #4CAF50;
-            font-size: clamp(1.5rem, 2.5vw, 3rem);
-        }
-        
-        .waiting-time p {
-            color: #2e7d32;
-            font-size: clamp(1rem, 1.8vw, 2rem);
-            font-weight: 600;
-        }
-        
-        .footer {
-            margin-top: 5vh;
-            padding-top: 3vh;
-            border-top: 0.2vh solid #eee;
-            color: #777;
-            font-size: clamp(0.9rem, 1.5vw, 1.8rem);
-        }
-        
-        .countdown {
-            font-size: clamp(1.2rem, 2vw, 2.2rem);
-            font-weight: 700;
-            color: var(--primary-blue);
-            margin-top: 2vh;
-        }
-        
-        @media (max-width: 768px) {
-            body {
-                padding: 2vh 3vw;
-            }
-            
+        /* تحسين التصميم للشاشات الواسعة */
+        @media screen and (min-width: 1600px) {
             .ticket-container {
-                padding: 3vh;
-                border-radius: 2vh;
-            }
-            
-            .ticket-number-display {
-                padding: 2vh;
-            }
-            
-            .department-info {
-                padding: 2vh;
-            }
-        }
-        
-        @media (max-height: 600px) {
-            .ticket-container {
-                padding: 2vh;
-            }
-            
-            .logo {
-                height: 8vh;
-            }
-            
-            .ticket-number {
-                font-size: clamp(3rem, 8vw, 10rem);
+                max-width: 1400px;
+                margin: 0 auto;
             }
         }
     </style>
 </head>
 <body>
     <div class="ticket-container">
-        <div class="header-section">
+        <!-- الجانب الأيسر: معلومات أساسية -->
+        <div class="left-section">
             <img src="https://i.ibb.co/1GHY3whz/bsxB90Z.png" alt="شعار شركة الزهراني لوجستيك" class="logo">
             <div class="company-name">الزهراني لوجستيك</div>
             <div class="system-name">نظام إدارة التذاكر الإلكتروني</div>
-        </div>
-        
-        <div class="success-section">
+            
             <div class="success-icon">
                 <i class="fas fa-check-circle"></i>
             </div>
-            <h1 class="ticket-heading">تم إنشاء تذكرتك بنجاح</h1>
-            <p class="success-message">شكرًا لزيارتك، يرجى الانتظار حتى يتم استدعاؤك</p>
+            
+            <h1 class="success-title">تم إنشاء تذكرتك بنجاح</h1>
+            <p class="success-subtitle">شكرًا لزيارتك، يرجى الانتظار في منطقة الانتظار حتى يتم استدعاؤك</p>
         </div>
         
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p>جاري إنشاء التذكرة وإعداد بياناتك...</p>
-        </div>
-        
-        <div class="ticket-info" id="ticketInfo">
-            <div class="ticket-number-display">
-                <div class="ticket-number-label">رقم تذكرتك</div>
-                <div class="ticket-number" id="ticketNumber">1001</div>
-                <div class="ticket-number-arabic" id="ticketNumberArabic">١٠٠١</div>
+        <!-- الجانب الأيمن: تفاصيل التذكرة -->
+        <div class="right-section">
+            <!-- رسالة التحميل -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p class="loading-text">جاري إنشاء التذكرة وإعداد بياناتك...</p>
             </div>
             
-            <div class="department-info">
-                <div class="department-label">القسم المخصص</div>
-                <div class="department-name" id="departmentName">المدير المالي</div>
-                <div class="department-description" id="departmentDescription">
-                    الرجاء التوجه إلى قسم المدير المالي في الطابق الثالث
+            <!-- رسالة خطأ -->
+            <div class="error-message" id="errorMessage">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>حدث خطأ في إنشاء التذكرة. يرجى المحاولة مرة أخرى.</p>
+            </div>
+            
+            <!-- محتوى التذكرة -->
+            <div id="ticketContent" style="display: none;">
+                <!-- الرأس -->
+                <div class="ticket-header">
+                    <div class="ticket-number-main" id="ticketNumber">1001</div>
+                    <div class="ticket-number-arabic" id="ticketNumberArabic">رقم: ١٠٠١</div>
+                </div>
+                
+                <!-- قسم معلومات القسم -->
+                <div class="department-section">
+                    <div class="department-label">القسم المخصص</div>
+                    <div class="department-name" id="departmentName">المدير المالي</div>
+                    <div class="department-description" id="departmentDescription">
+                        الرجاء التوجه إلى قسم المدير المالي في الطابق الثالث، الغرفة ٣٠١
+                    </div>
+                </div>
+                
+                <!-- قسم التعليمات -->
+                <div class="instructions-section">
+                    <div class="instruction-card">
+                        <div class="instruction-icon">
+                            <i class="fas fa-chair"></i>
+                        </div>
+                        <div class="instruction-text">اجلس في منطقة الانتظار</div>
+                    </div>
+                    
+                    <div class="instruction-card">
+                        <div class="instruction-icon">
+                            <i class="fas fa-tv"></i>
+                        </div>
+                        <div class="instruction-text">تابع الشاشة الرئيسية</div>
+                    </div>
+                    
+                    <div class="instruction-card">
+                        <div class="instruction-icon">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <div class="instruction-text">استمع للإعلان الصوتي</div>
+                    </div>
+                    
+                    <div class="instruction-card">
+                        <div class="instruction-icon">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div class="instruction-text">توجه عند استدعائك</div>
+                    </div>
+                </div>
+                
+                <!-- معلومات الانتظار -->
+                <div class="waiting-info">
+                    <div class="waiting-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="waiting-text">
+                        متوسط وقت الانتظار: ١٠-١٥ دقيقة
+                    </div>
+                </div>
+                
+                <!-- المؤقت العد التنازلي -->
+                <div class="countdown-section">
+                    <div class="countdown-text">سيتم إغلاق هذه الصفحة خلال:</div>
+                    <div class="countdown-timer">
+                        <span id="countdownTimer">15</span> ثانية
+                    </div>
                 </div>
             </div>
             
-            <div class="instructions">
-                <h3><i class="fas fa-info-circle"></i> تعليمات مهمة</h3>
-                <ul class="instructions-list">
-                    <li>يرجى الجلوس في منطقة الانتظار المخصصة</li>
-                    <li>ستتم دعوتك عبر الشاشة الرئيسية والصوتيات</li>
-                    <li>احتفظ برقم التذكرة للرجوع إليه عند الحاجة</li>
-                    <li>يرجى الالتزام بآداب الانتظار وعدم التجاوز</li>
-                </ul>
-            </div>
-            
-            <div class="waiting-time">
-                <i class="fas fa-clock"></i>
-                <p>متوسط وقت الانتظار: ١٠-١٥ دقيقة</p>
-            </div>
-            
-            <div class="countdown" id="countdown">
-                سيتم إغلاق هذه الصفحة خلال: <span id="countdownTimer">15</span> ثانية
+            <!-- رسالة نجاح -->
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle"></i>
+                <p>تم إنشاء التذكرة بنجاح! يرجى الاحتفاظ برقم التذكرة.</p>
             </div>
         </div>
-        
-        <div class="footer">
-            <p>نظام إدارة التذاكر الإلكتروني | جميع الحقوق محفوظة © 2024</p>
-            <p>شركة الزهراني لوجستيك | خدمة العملاء: ٩٢٠٠٢٤٥٦٧</p>
-        </div>
+    </div>
+    
+    <!-- الفوتر -->
+    <div class="footer">
+        <p>نظام إدارة التذاكر الإلكتروني | جميع الحقوق محفوظة © 2024</p>
+        <p>شركة الزهراني لوجستيك | خدمة العملاء: ٩٢٠٠٢٤٥٦٧</p>
     </div>
     
     <!-- Firebase SDK -->
@@ -379,7 +530,9 @@
         
         // DOM elements
         const loadingEl = document.getElementById('loading');
-        const ticketInfoEl = document.getElementById('ticketInfo');
+        const ticketContentEl = document.getElementById('ticketContent');
+        const errorMessageEl = document.getElementById('errorMessage');
+        const successMessageEl = document.getElementById('successMessage');
         const ticketNumberEl = document.getElementById('ticketNumber');
         const ticketNumberArabicEl = document.getElementById('ticketNumberArabic');
         const departmentNameEl = document.getElementById('departmentName');
@@ -390,27 +543,27 @@
         const departments = {
             finance: { 
                 name: "المدير المالي", 
-                description: "الرجاء التوجه إلى قسم المدير المالي في الطابق الثالث" 
+                description: "الرجاء التوجه إلى قسم المدير المالي في الطابق الثالث، الغرفة ٣٠١" 
             },
             ninja: { 
                 name: "مشرفين نينجا", 
-                description: "الرجاء التوجه إلى قسم مشرفين نينجا في الطابق الثاني" 
+                description: "الرجاء التوجه إلى قسم مشرفين نينجا في الطابق الثاني، الغرفة ٢٠٥" 
             },
             keemart: { 
                 name: "مشرف كيمارت", 
-                description: "الرجاء التوجه إلى قسم مشرف كيمارت في الطابق الأول" 
+                description: "الرجاء التوجه إلى قسم مشرف كيمارت في الطابق الأول، الغرفة ١٠٣" 
             },
             vehicles: { 
                 name: "مسؤول المركبات", 
-                description: "الرجاء التوجه إلى قسم مسؤول المركبات في الطابق الأرضي" 
+                description: "الرجاء التوجه إلى قسم مسؤول المركبات في الطابق الأرضي، الغرفة ٠٠٥" 
             },
             projects: { 
                 name: "مدير المشاريع التشغيلية", 
-                description: "الرجاء التوجه إلى قسم مدير المشاريع التشغيلية في الطابق الرابع" 
+                description: "الرجاء التوجه إلى قسم مدير المشاريع التشغيلية في الطابق الرابع، الغرفة ٤٠١" 
             },
             hr: { 
                 name: "مدير الموارد البشرية", 
-                description: "الرجاء التوجه إلى قسم مدير الموارد البشرية في الطابق الثالث" 
+                description: "الرجاء التوجه إلى قسم مدير الموارد البشرية في الطابق الثالث، الغرفة ٣٠٥" 
             }
         };
         
@@ -438,6 +591,9 @@
             try {
                 // Show loading
                 loadingEl.classList.add('active');
+                errorMessageEl.classList.remove('show');
+                successMessageEl.classList.remove('show');
+                ticketContentEl.style.display = 'none';
                 
                 // Get last ticket number for this department
                 const deptRef = ref(db, `tickets/${department}`);
@@ -486,16 +642,50 @@
                 timeLeft--;
                 countdownEl.textContent = timeLeft;
                 
+                // Change color when time is running out
+                if (timeLeft <= 5) {
+                    countdownEl.style.color = '#f44336';
+                }
+                
                 if (timeLeft <= 0) {
                     clearInterval(countdownInterval);
-                    // Try to close the window
-                    if (window.history.length > 1) {
-                        window.history.back();
-                    } else {
-                        window.close();
-                    }
+                    // Show closing message
+                    countdownEl.textContent = "جاري الإغلاق...";
+                    
+                    // Try to close the window after 2 seconds
+                    setTimeout(() => {
+                        if (window.history.length > 1) {
+                            window.history.back();
+                        } else {
+                            window.close();
+                        }
+                    }, 2000);
                 }
             }, 1000);
+        }
+        
+        // Display ticket information
+        function displayTicketInfo(ticketNumber, department) {
+            // Update ticket numbers
+            ticketNumberEl.textContent = ticketNumber;
+            ticketNumberArabicEl.textContent = `رقم: ${toArabicDigits(ticketNumber)}`;
+            
+            // Update department info
+            departmentNameEl.textContent = departments[department].name;
+            departmentDescriptionEl.textContent = departments[department].description;
+            
+            // Hide loading and show content
+            loadingEl.classList.remove('active');
+            ticketContentEl.style.display = 'block';
+            successMessageEl.classList.add('show');
+            
+            // Add loaded class for animation
+            setTimeout(() => {
+                document.querySelector('.ticket-header').classList.add('ticket-loaded');
+            }, 100);
+            
+            // Start countdown
+            startCountdown(15);
         }
         
         // Initialize page
@@ -503,46 +693,50 @@
             const department = getDepartmentFromURL();
             
             if (departments[department]) {
-                // Set department info
-                departmentNameEl.textContent = departments[department].name;
-                departmentDescriptionEl.textContent = departments[department].description;
-                
                 try {
                     // Generate new ticket
                     const ticketNumber = await generateTicketNumber(department);
                     
-                    // Update UI
-                    ticketNumberEl.textContent = ticketNumber;
-                    ticketNumberArabicEl.textContent = toArabicDigits(ticketNumber);
-                    
-                    // Hide loading and show ticket info
-                    loadingEl.classList.remove('active');
-                    ticketInfoEl.classList.add('show');
-                    
-                    // Start countdown
-                    startCountdown(15);
+                    // Display ticket information
+                    displayTicketInfo(ticketNumber, department);
                     
                 } catch (error) {
                     // Handle error
                     loadingEl.classList.remove('active');
-                    ticketInfoEl.classList.add('show');
-                    ticketNumberEl.textContent = "خطأ";
-                    ticketNumberArabicEl.textContent = "خطأ";
-                    departmentNameEl.textContent = "خطأ في النظام";
-                    departmentDescriptionEl.textContent = "يرجى المحاولة مرة أخرى أو الاتصال بالدعم الفني";
+                    errorMessageEl.classList.add('show');
                     
-                    // Don't start countdown on error
-                    document.getElementById('countdown').style.display = 'none';
+                    // Show error details in console
+                    console.error("Ticket generation failed:", error);
                 }
             } else {
                 // Invalid department
                 loadingEl.classList.remove('active');
-                ticketInfoEl.classList.add('show');
-                departmentNameEl.textContent = "قسم غير صالح";
-                departmentDescriptionEl.textContent = "يرجى استخدام QR Code صالح";
-                ticketNumberEl.style.display = 'none';
-                ticketNumberArabicEl.style.display = 'none';
-                document.getElementById('countdown').style.display = 'none';
+                errorMessageEl.classList.add('show');
+                errorMessageEl.innerHTML = `
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>قسم غير صالح. يرجى استخدام QR Code صالح.</p>
+                `;
+            }
+        });
+        
+        // Handle window resize for orientation changes
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                // Force reflow for responsive adjustments
+                document.body.style.display = 'none';
+                document.body.offsetHeight; // Trigger reflow
+                document.body.style.display = '';
+            }, 250);
+        });
+        
+        // Prevent accidental closing
+        window.addEventListener('beforeunload', (e) => {
+            // Only show confirmation if page hasn't been shown for at least 5 seconds
+            if (parseInt(countdownEl.textContent) > 10) {
+                e.preventDefault();
+                e.returnValue = 'هل تريد مغادرة هذه الصفحة؟ قد تفقد معلومات التذكرة.';
             }
         });
     </script>
